@@ -54,5 +54,5 @@ def process_ams_imagefeature(amsfile):
     dataframelist.append(standard)
     df = pd.DataFrame(dataframelist)
     df.to_csv("./upload/"+filename+"_"+"imgfeature.csv",index=False)
-# process_ams_imagefeature('./train/0A32eTdBKayjCWhZqDOQ.asm')
+# process_ams_imagefeature('./train/0aKlH1MRxLmv34QGhEJP.asm')
 # train()
