@@ -21,7 +21,7 @@ def train():
     srf.fit(X_train,y_train)
     # print(X_test)
     # print(y_test)
-    with open('model.pt', 'wb') as f:
+    with open('./model/model.pt', 'wb') as f:
         pickle.dump(srf,f)
 
     # from sklearn.metrics import classification_report,roc_auc_score,roc_curve
@@ -48,9 +48,9 @@ def use(amsfile, tmpfile):
     labels = subtrain.Class
     subtrain.drop(["Class","Id"], axis=1, inplace=True)
     subtrain = subtrain.values
-    with open('model.pt', 'rb') as f:
+    with open('model/model.pt', 'rb') as f:
         srf=pickle.load(f)
-    with open('model_backup.pt', 'rb') as fb:
+    with open('model/model_backup.pt', 'rb') as fb:
         srfb=pickle.load(fb)
     try:
         return srf.predict(subtrain)

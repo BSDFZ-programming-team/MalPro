@@ -15,7 +15,7 @@ def train():
 
     srf = RF(n_estimators=500, n_jobs=-1)
     srf.fit(X_train,y_train)
-    with open('model_backup.pt', 'wb') as f:
+    with open('./model/model_backup.pt', 'wb') as f:
         pickle.dump(srf,f)
     return srf.score(X_test,y_test)
 # def predict(amsfile):

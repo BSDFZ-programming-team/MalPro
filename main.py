@@ -60,14 +60,14 @@ if __name__ == '__main__':
             console.print('''
         [cyan]menu:
             [1] Train a model
-            [2] Predict malware(.asm) directly(using model.pt)
+            [2] Predict malware(.asm) directly(using ./model/model.pt & ./model/model_backup.pt)
             [99] Exit[/cyan]
         ''')
             choice = input(': >>> ')
             if choice == '2':
                 if not exists('./upload'):
                     mkdir('./upload')
-                console.log(f'[*] Loading models at ./model.pt and ./model_backup.pt')
+                console.log(f'[*] Loading models at ./model/model.pt and ./model/model_backup.pt')
                 file_location = input("input the .asm file location : >>> ")
                 stat = console.status('Analyzing...')
                 stat.start()
