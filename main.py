@@ -7,7 +7,7 @@ from shutil import rmtree
 from random import randint
 import firstrandomforest
 from os import mkdir
-from os.path import exists
+from os.path import exists, basename
 import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
 import combine
@@ -29,6 +29,15 @@ def process_upload_asm(asm_file_name):
         return 'Unknown .asm file'
     else:
         return resultlist[int(result)-1]
+def detect_virus(exe_file_path):
+    # 文件黑白判断接口
+    return True
+def exe2asm(exe_file_path):
+    # exe反编译接口
+    filename = basename(exe_file_path)
+    # 反编译
+    asm_path = filename.split('.')[0]+'.asm'
+    return asm_path
 TRAIN_DIR = './train'
 TEST_DIR = './test'
 BANNER = f'''
