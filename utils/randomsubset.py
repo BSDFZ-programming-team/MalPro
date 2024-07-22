@@ -1,4 +1,3 @@
-import os
 from random import *
 import pandas as pd
 import shutil

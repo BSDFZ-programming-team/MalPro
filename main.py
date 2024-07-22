@@ -2,18 +2,17 @@
 # @FileName  :MAIN.PY
 # @Time      :2024/07/17 10:00:31
 # @Author    :LamentXU
-import combine
+import train.combine as combine
 from shutil import rmtree
 from random import randint
-import firstrandomforest
+import train.firstrandomforest as firstrandomforest
 from os import mkdir
 from os.path import exists, basename
 import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
-import combine
-import asmimage
-import randomsubset
-import opcodeandngram
+import utils.asmimage as asmimage
+import utils.randomsubset as randomsubset
+import utils.opcodeandngram as opcodeandngram
 from rich.console import Console
 VERSION = 'V0.1 BETA'
 resultlist=['Ramnit', 'Lollipop', 'Kelihos_ver3', 'Vundo', 'Simda','Tracur','Kelihos_ver1','Obfuscator.ACY','Gatak']
