@@ -108,7 +108,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.metrics import classification_report    
 from os import listdir, mkdir
 from os.path import basename, exists
-from tqdm import tqdm
+from rich.progress import track
 from shutil import rmtree
 def test_single(asm, eval_mode=False):
     asm_basename = basename(asm)
@@ -173,7 +173,7 @@ if __name__ == '__main__':
         test8coor = [0, column_data.count(7)]
         test9coor = [0, column_data.count(8)]
         testcoor = [test1coor, test2coor, test3coor, test4coor, test5coor, test6coor, test7coor, test8coor, test9coor]
-        for asm in tqdm(listdir('./test_cnn')):
+        for asm in track(listdir('./test_cnn'), description='Examing the model'):
             result = test_single('./test_cnn/'+asm, eval_mode=True)
             if result[1]:
                 testcoor[result[0][0]][0]+=1

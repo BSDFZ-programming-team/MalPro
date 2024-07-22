@@ -4,7 +4,6 @@ from collections import *
 import pandas as pd
 import binascii
 from rich.progress import track
-import time
 
 def getMatrixfrom_asm(filename, startindex = 0, pixnum = 5000):
     with open(filename, 'rb') as f:

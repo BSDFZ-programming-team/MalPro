@@ -1,7 +1,6 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
-from starlette.status import HTTP_201_CREATED
 import fastapi_cdn_host
 import os
 import uvicorn
@@ -86,9 +85,9 @@ async def get_upload_page():
     <body>
         <img id="logo" src="/static/logo.png" alt="Logo">
         <h1>MalPro v0.1 Beta</h1>
-        <p>Upload your file here (only .asm files allowed).</p>
+        <p>Upload your file here (only .exe files allowed).</p>
         <form action="/uploadfile/" method="post" enctype="multipart/form-data">
-            <input type="file" name="file" accept=".asm">
+            <input type="file" name="file" accept=".exe">
             <button type="submit">Upload File</button>
         </form>
         <div class="message" id="message"></div>
@@ -114,9 +113,12 @@ async def upload(file: UploadFile = File(...)):
         asm_file = exe2asm(data)
         result = process_upload_asm(asm_file)
         rmtree('./upload')
+        color = 'red'
     else:
         result = 'NON-VIRUS'
-    return """
+        color = 'green'
+    tag = result #TODO and more TAG
+    return '''
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -179,10 +181,10 @@ async def upload(file: UploadFile = File(...)):
         </head>
         <body>
         <img id="logo" src="/static/logo.png" alt="Logo">
-        <h1>predict type: """+result+"""</h1>
+        <h1 class="'''+color+'''">predict type: '''+tag+'''</h1>
         </body>
         </html>
-        """
+        '''
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000)
