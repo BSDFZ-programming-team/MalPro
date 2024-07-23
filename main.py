@@ -30,8 +30,10 @@ def process_upload_asm(asm_file_name):
         return resultlist[int(result)-1]
 def detect_virus(exe_file_path):
     # 文件黑白判断接口
-    return True
+    # TODO
+    return False #True -> 文件为病毒；False -> 文件不为病毒
 def exe2asm(exe_file_path):
+    # TODO
     # exe反编译接口
     filename = basename(exe_file_path)
     # 反编译
