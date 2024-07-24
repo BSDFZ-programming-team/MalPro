@@ -99,5 +99,35 @@ def process_ams_imagefeature(asmfile):
                 standard[feature] = 0
         dataframelist.append(standard)
     df = pd.DataFrame(dataframelist)
-    df.to_csv(f"./upload/{basename}_3gramfeature.csv",index=False)
+    df.to_csv(f"./upload/{basename}_3gramfeature_tmp.csv",index=False)
+    return f"./upload/{basename}_3gramfeature_tmp.csv"
+def fit_feature_to_model(tmp_csv, basename):
+    df_first_row = pd.read_csv('./3gramfeature.csv', nrows=1, header=None)
+    first_row = df_first_row.values.tolist()[0]
+    first_row.pop(0)
+    _tmp_first_row = pd.read_csv(tmp_csv, nrows=2, header=None)
+    tmp_first_row = _tmp_first_row.values.tolist()[0]
+    tmp_second_row = _tmp_first_row.values.tolist()[1]
+    tmp_first_row.pop(0)
+    tmp_second_row.pop(0)
+    data = {}
+    for i in first_row:
+        if i in tmp_first_row:
+            index = tmp_first_row.index(i)
+            value = tmp_second_row[index]
+        else:
+            value = '0'
+        data[i] = value
+    # df = pd.DataFrame(data)
+    with open('./upload/'+basename+'_3gramfeature.csv', 'w+') as f:
+        buf = 'Id,'
+        for keys in data.keys():
+            buf += '"'+keys+'",'
+        buf = buf[:-1]
+        buf += ('\n'+basename+',')
+        for vals in data.values():
+            buf += vals+','
+        buf = buf[:-1]
+        f.write(buf)
 # process_ams_imagefeature('./train/0AwWs42SUQ19mI7eDcTC.asm')
+# fit_feature_to_model("./upload/0AwWs42SUQ19mI7eDcTC.asm_3gramfeature_tmp.csv", '0AwWs42SUQ19mI7eDcTC.asm')

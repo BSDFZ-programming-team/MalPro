@@ -17,13 +17,14 @@ from rich.console import Console
 VERSION = 'V0.1 BETA'
 resultlist=['Ramnit', 'Lollipop', 'Kelihos_ver3', 'Vundo', 'Simda','Tracur','Kelihos_ver1','Obfuscator.ACY','Gatak']
 def process_upload_asm(asm_file_name):
-    basename = asmimage.os.path.basename(asm_file_name)
+    filebasename = basename(asm_file_name)
     asmimage.process_ams_imagefeature(asm_file_name)
-    opcodeandngram.process_ams_imagefeature(asm_file_name)
-    with open(f'./upload/{basename}_tmp.csv', 'w') as f:
+    tmpfile = opcodeandngram.process_ams_imagefeature(asm_file_name)
+    opcodeandngram.fit_feature_to_model(tmpfile, filebasename)
+    with open(f'./upload/{filebasename}_tmp.csv', 'w') as f:
         f.write('Id,Class\n')
-        f.write(f'{basename},0')
-    result = combine.use(asm_file_name, f'./upload/{basename}_tmp.csv')
+        f.write(f'{filebasename},0')
+    result = combine.use(asm_file_name, f'./upload/{filebasename}_tmp.csv')
     if result == 0:
         return 'Unknown .asm file'
     else:
@@ -62,7 +63,7 @@ if __name__ == '__main__':
             console.print('''
         [cyan]menu:
             [1] Train a model
-            [2] Predict malware(.asm) directly(using ./model/model.pt & ./model/model_backup.pt)
+            [2] Predict malware(.asm) directly(using ./model/model.pt)
             [99] Exit[/cyan]
         ''')
             choice = input(': >>> ')
@@ -78,7 +79,7 @@ if __name__ == '__main__':
                 console.bell()
                 if result == 'Unknown .asm file':
                     console.log('[-] Failed, unknown .asm file')
-                console.log(f'[+] Predict DONE. the malware type is {result}')
+                console.log(f'[+] Predict DONE. the malware type is [red bold]{result}[/red bold]')
                 rmtree('./upload')
                 console.log(f'[*] Deleted tmp file at /upload')
             elif choice == '1':
@@ -98,7 +99,7 @@ if __name__ == '__main__':
                 accu = combine.train()
                 console.log(f'[+] Training DONE, Accuracy: {accu}')
                 stat.stop()
-                console.log('Training DONE, model saved at ./model and ./model_backup')
+                console.log('Training DONE, model saved at ./model.pt')
             elif choice == '99':
                 break
             else:

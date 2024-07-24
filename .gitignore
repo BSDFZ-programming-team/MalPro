@@ -2,3 +2,9 @@
 /trainLabels_all.csv
 /train/
 /MD5_record_list.json
+/imgfeature.csv
+/3gramfeature.csv
+/subtrain/
+/trainLabels.csv
+/subtrainLabels.csv
+/upload/

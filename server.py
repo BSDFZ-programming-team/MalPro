@@ -104,6 +104,7 @@ async def get_upload_page():
         <p>Upload your file here (only .exe & ≤8MB files allowed).</p>
         <form action="/uploadfile/" method="post" enctype="multipart/form-data">
             <input type="file" name="file" accept=".exe">
+        
             <button type="submit">Upload File</button>
         </form>
         <div class="message" id="message"></div>
@@ -142,12 +143,13 @@ async def upload(file: UploadFile = File(...)):
             # Caculate some basic informations
             try:
                 pe = pefile.PE(save_file)
-                # assert hex(pe.FILE_HEADER.Characteristics) == "0x102" #EXE file
+                # assert hex(pe.FILE_HEADER.Characteristics) == "0x102"  or hex(pe.FILE_HEADER.Characteristics) == "0x818f"#EXE file
             except Exception as e:
-                if type(e) == AssertionError:
-                    result = 'UNAVALIABLE PE FILE (no 0x102 found in header)'
-                else:
-                    result = 'UNAVALIABLE PE FILE (failed to load)'
+                # if type(e) == AssertionError:
+                #     result = 'UNAVALIABLE PE FILE (no 0x102 found in header)'
+                # else:
+                #     result = 'UNAVALIABLE PE FILE (failed to load)'
+                result = 'UNAVALIABLE PE FILE (failed to load)'
                 color = 'red'
                 platform = ''
                 return [[result, platform], color]

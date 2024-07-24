@@ -35,7 +35,7 @@ def train():
     # ap_score = average_precision_score(y_true=y_test,y_score=rfc_prob)
     # #画出PR曲线
     # precision_recall_curve(estimator=srf,X=X_test,y=y_test,pos_label=1)
-
+    srf.predict(X_test)
 
     return srf.score(X_test,y_test)
 def use(amsfile, tmpfile):
@@ -45,22 +45,24 @@ def use(amsfile, tmpfile):
     subtrainfeature2 = pd.read_csv(f"./upload/{filename}_3gramfeature.csv")
     subtrain = pd.merge(subtrainfeature1,subtrainfeature2,on='Id')
     subtrain = pd.merge(subtrain,subtrainLabel,on='Id')
-    labels = subtrain.Class
+    # labels = subtrain.Class
     subtrain.drop(["Class","Id"], axis=1, inplace=True)
     subtrain = subtrain.values
     with open('model/model.pt', 'rb') as f:
         srf=pickle.load(f)
-    with open('model/model_backup.pt', 'rb') as fb:
-        srfb=pickle.load(fb)
-    try:
-        return srf.predict(subtrain)
-    except:
-        try:
-            subtrain = pd.merge(subtrainfeature1,subtrainLabel,on='Id')
-            subtrain.drop(["Class","Id"], axis=1, inplace=True)
-            subtrain = subtrain.values
-            return srfb.predict(subtrain)
-        except:
-            return 0
+    return srf.predict(subtrain)
+    # with open('model/model_backup.pt', 'rb') as fb:
+    #     srfb=pickle.load(fb)
+    # try:
+    #     return srf.predict(subtrain)
+    # except Exception as e:
+    #     print(e)
+    #     try:
+    #         subtrain = pd.merge(subtrainfeature1,subtrainLabel,on='Id')
+    #         subtrain.drop(["Class","Id"], axis=1, inplace=True)
+    #         subtrain = subtrain.values
+    #         return srfb.predict(subtrain)
+    #     except:
+    #         return 0
 # print(train())
 # use()
