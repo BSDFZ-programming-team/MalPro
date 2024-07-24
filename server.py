@@ -4,6 +4,7 @@ from fastapi.staticfiles import StaticFiles
 import fastapi_cdn_host
 import os
 import uvicorn
+import json
 import pefile
 from hashlib import md5
 from main import process_upload_asm, detect_virus, exe2asm
@@ -100,7 +101,7 @@ async def get_upload_page():
     <body>
         <img id="logo" src="/static/logo.png" alt="Logo">
         <h1>MalPro v0.1 Beta</h1>
-        <p>Upload your file here (only .exe files allowed).</p>
+        <p>Upload your file here (only .exe & ≤8MB files allowed).</p>
         <form action="/uploadfile/" method="post" enctype="multipart/form-data">
             <input type="file" name="file" accept=".exe">
             <button type="submit">Upload File</button>
@@ -110,63 +111,87 @@ async def get_upload_page():
     </html>
     """
 
-# 文件上传的API端点
 @app.post("/uploadfile/", response_class=HTMLResponse)
 async def upload(file: UploadFile = File(...)):
-    random_name = str(randint(100000, 999999))
-    fn = random_name+'.exe'
-    save_path = f'./upload/'
-    if not os.path.exists(save_path):
-        os.mkdir(save_path)
-    save_file = os.path.join(save_path, fn)
-
-    f = open(save_file, 'wb')
     data = await file.read()
-    data_md5 = md5(data).hexdigest() #TODO MD5 tmp list
-    f.write(data)
-    f.close()
-    file_size = os.path.getsize(save_file)
-    # Caculate some basic informations
-    try:
-        pe = pefile.PE(save_file)
-        assert hex(pe.FILE_HEADER.Characteristics) == "0x102" #EXE file
-    except:
-        result = 'UNAVALIABLE EXE FILE'
-        color = 'red'
-        platfrom = ''
+    random_name = str(randint(100000, 999999))
+    file_size = file.size
+    if file_size > 8*1024*1024:
+        result=[[f'FILE TOO LARGE ({NumberOfBytesHumanRepresentation(file_size)})', ''], 'red']
     else:
-        # Calculate the file size
-        
-        # Close the PE file
-        # Retrieve the Machine field from the PE header
-        machine = pe.FILE_HEADER.Machine
-        
-        # Map the Machine value to human-readable platform
-        if machine == 0x14C:
-            platfrom = "Intel 386 or later processors "
-        elif machine == 0x8664:
-            platfrom = "x64 (AMD64)"
-        elif machine == 0x1C0:
-            platfrom = "ARM"
-        elif machine == 0xAA64:
-            platfrom = "ARM64"
-        else:
-            platfrom = "Unknown machine type: 0x{machine:04X}"
-        if detect_virus(save_file):
-            #TODO 把exe反编译成asm
-            asm_file = exe2asm(data)
-            result = process_upload_asm(asm_file)
-            color = 'red'
-        else:
-            result = 'NON-VIRUS'
-            color = 'green'
-    finally:
-        try:
-            pe.close()
-        except:
-            pass
-        rmtree('./upload')
-    tag = Generate_tag([result, platfrom]) #TODO add more TAG
+        fn = random_name+'.exe'
+        save_path = f'./upload/'
+        if not os.path.exists(save_path):
+            os.mkdir(save_path)
+        save_file = os.path.join(save_path, fn)
+        f = open(save_file, 'wb')
+        f.write(data)
+        f.close()
+        del f
+        data_md5 = md5(data).hexdigest() #TODO MD5 tmp list
+        def judge_file():
+            # RETURN: [[RESULT, PLATFORM], COLOR]
+            f_md5_json = open('MD5_record_list.json', 'r+')
+            try:
+                md5dict = json.load(f_md5_json)
+            except json.decoder.JSONDecodeError:
+                md5dict = {}
+            if data_md5 in md5dict:
+                # print(1)
+                return md5dict[data_md5]
+            # Caculate some basic informations
+            try:
+                pe = pefile.PE(save_file)
+                # assert hex(pe.FILE_HEADER.Characteristics) == "0x102" #EXE file
+            except Exception as e:
+                if type(e) == AssertionError:
+                    result = 'UNAVALIABLE PE FILE (no 0x102 found in header)'
+                else:
+                    result = 'UNAVALIABLE PE FILE (failed to load)'
+                color = 'red'
+                platform = ''
+                return [[result, platform], color]
+            else:
+            
+                # Retrieve the Machine field from the PE header
+                machine = pe.FILE_HEADER.Machine
+                
+                # Map the Machine value to human-readable platform
+                if machine == 0x14C:
+                    platform = "Intel 386 or later processors "
+                elif machine == 0x8664:
+                    platform = "x64 (AMD64)"
+                elif machine == 0x1C0:
+                    platform = "ARM"
+                elif machine == 0xAA64:
+                    platform = "ARM64"
+                else:
+                    platform = "Unknown machine type: 0x{machine:04X}"
+                if detect_virus(save_file):
+                    #TODO 把exe反编译成asm
+                    asm_file = exe2asm(data)
+                    result = process_upload_asm(asm_file)
+                    color = 'red'
+                else:
+                    result = 'NON-VIRUS'
+                    color = 'green'
+            finally:
+                try:
+                    pe.close()
+                except:
+                    pass
+                rmtree('./upload')
+                md5dict[data_md5] = [[result, platform], color]
+                f_md5_json.seek(0) 
+                f_md5_json.truncate()
+                f_md5_json.flush()
+                json.dump(md5dict, f_md5_json)
+                f_md5_json.close()
+            return [[result, platform], color]
+        result = judge_file()   
+    color = result[-1]
+    result = result[0]
+    tag = Generate_tag(result) #TODO add more TAG
         
     return '''
         <!DOCTYPE html>

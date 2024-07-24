@@ -2,10 +2,10 @@
 # @FileName  :MAIN.PY
 # @Time      :2024/07/17 10:00:31
 # @Author    :LamentXU
-import train.combine as combine
+import train_src.combine as combine
 from shutil import rmtree
 from random import randint
-import train.firstrandomforest as firstrandomforest
+import train_src.firstrandomforest as firstrandomforest
 from os import mkdir
 from os.path import exists, basename
 import warnings
