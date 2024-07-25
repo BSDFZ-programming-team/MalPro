@@ -102,7 +102,7 @@ def process_ams_imagefeature(asmfile):
     df.to_csv(f"./upload/{basename}_3gramfeature_tmp.csv",index=False)
     return f"./upload/{basename}_3gramfeature_tmp.csv"
 def fit_feature_to_model(tmp_csv, basename):
-    df_first_row = pd.read_csv('./3gramfeature.csv', nrows=1, header=None)
+    df_first_row = pd.read_csv('./model/3gramfeature_fitting_use.csv', nrows=1, header=None)
     first_row = df_first_row.values.tolist()[0]
     first_row.pop(0)
     _tmp_first_row = pd.read_csv(tmp_csv, nrows=2, header=None)

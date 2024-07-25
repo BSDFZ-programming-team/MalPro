@@ -14,12 +14,14 @@ import utils.asmimage as asmimage
 import utils.randomsubset as randomsubset
 import utils.opcodeandngram as opcodeandngram
 from rich.console import Console
+from shutil import copyfile
 VERSION = 'V0.1 BETA'
 resultlist=['Ramnit', 'Lollipop', 'Kelihos_ver3', 'Vundo', 'Simda','Tracur','Kelihos_ver1','Obfuscator.ACY','Gatak']
 def process_upload_asm(asm_file_name):
     filebasename = basename(asm_file_name)
     asmimage.process_ams_imagefeature(asm_file_name)
     tmpfile = opcodeandngram.process_ams_imagefeature(asm_file_name)
+    copyfile('3gramfeature.csv', './model/3gramfeature_fitting_use.csv')
     opcodeandngram.fit_feature_to_model(tmpfile, filebasename)
     with open(f'./upload/{filebasename}_tmp.csv', 'w') as f:
         f.write('Id,Class\n')
