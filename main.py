@@ -74,13 +74,16 @@ if __name__ == '__main__':
                     mkdir('./upload')
                 console.log(f'[*] Loading models at ./model/model.pt and ./model/model_backup.pt')
                 file_location = input("input the .asm file location : >>> ")
+                if not exists(file_location):
+                    console.log('[bold red][-] File not found[/bold red]')
+                    continue
                 stat = console.status('Analyzing...')
                 stat.start()
                 result = process_upload_asm(file_location)
                 stat.stop()
                 console.bell()
                 if result == 'Unknown .asm file':
-                    console.log('[-] Failed, unknown .asm file')
+                    console.log('[bold red][-] Failed, unknown .asm file[/bold red]')
                 console.log(f'[+] Predict DONE. the malware type is [red bold]{result}[/red bold]')
                 rmtree('./upload')
                 console.log(f'[*] Deleted tmp file at /upload')

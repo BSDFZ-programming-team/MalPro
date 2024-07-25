@@ -57,7 +57,7 @@ def train(stat):
     for k,v in cc.items():
         if v >= 500:
             selectedfeatures[k] = v
-            print (k,v)
+            # print (k,v)
             tc += 1
     dataframelist = []
     for fid,op3gram in map3gram.items():
@@ -84,10 +84,10 @@ def process_ams_imagefeature(asmfile):
     selectedfeatures = {}
     tc = 0
     for k,v in cc.items():
-        if v >= 500:
-            selectedfeatures[k] = v
-            # print (k,v)
-            tc += 1
+        # if v >= 500:
+        selectedfeatures[k] = v
+        # print (k,v)
+        tc += 1
     dataframelist = []
     for fid,op3gram in map3gram.items():
         standard = {}
@@ -129,5 +129,5 @@ def fit_feature_to_model(tmp_csv, basename):
             buf += vals+','
         buf = buf[:-1]
         f.write(buf)
-# process_ams_imagefeature('./train/0AwWs42SUQ19mI7eDcTC.asm')
-# fit_feature_to_model("./upload/0AwWs42SUQ19mI7eDcTC.asm_3gramfeature_tmp.csv", '0AwWs42SUQ19mI7eDcTC.asm')
+# process_ams_imagefeature('./train/5Wj7vbRmSAoHI2Dfsql3.asm')
+# fit_feature_to_model("./upload/5Wj7vbRmSAoHI2Dfsql3.asm_3gramfeature_tmp.csv", '0AwWs42SUQ19mI7eDcTC.asm')

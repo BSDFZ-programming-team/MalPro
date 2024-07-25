@@ -35,14 +35,16 @@ def train():
     # ap_score = average_precision_score(y_true=y_test,y_score=rfc_prob)
     # #画出PR曲线
     # precision_recall_curve(estimator=srf,X=X_test,y=y_test,pos_label=1)
-    srf.predict(X_test)
+    print(X_test)
+    print(srf.predict(X_test))
+    print(y_test)
 
     return srf.score(X_test,y_test)
 def use(amsfile, tmpfile):
     filename = os.path.basename(amsfile)
     subtrainLabel = pd.read_csv(tmpfile)
-    subtrainfeature1 = pd.read_csv(f"./upload/{filename}_imgfeature.csv")
-    subtrainfeature2 = pd.read_csv(f"./upload/{filename}_3gramfeature.csv")
+    subtrainfeature1 = pd.read_csv(f"./upload/{filename}_3gramfeature.csv")
+    subtrainfeature2 = pd.read_csv(f"./upload/{filename}_imgfeature.csv")
     subtrain = pd.merge(subtrainfeature1,subtrainfeature2,on='Id')
     subtrain = pd.merge(subtrain,subtrainLabel,on='Id')
     # labels = subtrain.Class
