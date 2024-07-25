@@ -1,5 +1,4 @@
 fastapi==0.111.1
-fastapi-cdn-host==0.6.0
 pefile==2023.2.7
 scikit-learn==1.5.1
 pandas==1.5.3

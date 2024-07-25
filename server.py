@@ -1,20 +1,28 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse,FileResponse, Response
 from fastapi.staticfiles import StaticFiles
-import fastapi_cdn_host
+# import fastapi_cdn_host
+from io import StringIO
+import sys
 import os
 import uvicorn
+import zipfile
 import json
-import pefile
+import utils.PE_analyse
 from hashlib import md5
 from main import process_upload_asm, detect_virus, exe2asm
 from shutil import rmtree
 from random import randint
+
 def Generate_tag(args_list:list):
     tag = ''
     for args in args_list:
         tag += args + '.'
-    return tag[:-1]
+    while True:
+        if tag.endswith('.'):
+            tag = tag[:-1]
+        else:
+            return tag
 def NumberOfBytesHumanRepresentation(value):
     if value <= 1024:
         return '%s bytes' % value
@@ -25,15 +33,22 @@ def NumberOfBytesHumanRepresentation(value):
     else:
         return '%.1f GB' % (float(value) / 1024.0 / 1024.0 / 1024.0)
 app = FastAPI()
-fastapi_cdn_host.patch_docs(app, favicon_url='./static/logo.svg')
+# fastapi_cdn_host.patch_docs(app, favicon_url='./static/logo.svg')
 # 定义上传文件的目标目录
-UPLOAD_DIR = "./upload"
-os.makedirs(UPLOAD_DIR, exist_ok=True)
-
+os.makedirs("./upload", exist_ok=True)
+os.makedirs("./download", exist_ok=True)
 # 静态文件目录
 app.mount("/static", StaticFiles(directory="./static"), name="static")
+# app.mount("/download", StaticFiles(directory="./download"), name="download")
 app.mount("/fonts", StaticFiles(directory="./fonts"), name="fonts")
-
+@app.get('/favicon.ico', include_in_schema=False)
+async def favicon():
+    return FileResponse('./static/favicon.ico')
+@app.get("/downloadfile")
+async def download(file_name:str):
+    # 需要下载文件名，从服务器保存文件地址拼接
+    file_path = "./download/"+file_name
+    return FileResponse(file_path, filename='analyze detail.zip', media_type="application/octet-stream")
 # 根路由，返回上传页面
 @app.get("/", response_class=HTMLResponse)
 async def get_upload_page():
@@ -41,6 +56,7 @@ async def get_upload_page():
     <!DOCTYPE html>
     <html lang="en">
     <head>
+        <link id="favicon" rel="icon" type="image/x-icon" href="static/favicon.ico">
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -141,34 +157,22 @@ async def upload(file: UploadFile = File(...)):
                 # print(1)
                 return md5dict[data_md5]
             # Caculate some basic informations
-            try:
-                pe = pefile.PE(save_file)
-                # assert hex(pe.FILE_HEADER.Characteristics) == "0x102"  or hex(pe.FILE_HEADER.Characteristics) == "0x818f"#EXE file
-            except Exception as e:
-                # if type(e) == AssertionError:
-                #     result = 'UNAVALIABLE PE FILE (no 0x102 found in header)'
-                # else:
-                #     result = 'UNAVALIABLE PE FILE (failed to load)'
-                result = 'UNAVALIABLE PE FILE (failed to load)'
-                color = 'red'
-                platform = ''
-                return [[result, platform], color]
+            analyze_result = utils.PE_analyse.check_avaliable(save_file)
+            if analyze_result == 'Load failed':
+                return [['UNAVALIABLE PE FILE (failed to load)', ''], 'red']
+            elif analyze_result == 'Header broken':
+                return [['UNAVALIABLE PE FILE (header broken)', ''], 'red']
             else:
-            
-                # Retrieve the Machine field from the PE header
-                machine = pe.FILE_HEADER.Machine
-                
-                # Map the Machine value to human-readable platform
-                if machine == 0x14C:
-                    platform = "Intel 386 or later processors "
-                elif machine == 0x8664:
-                    platform = "x64 (AMD64)"
-                elif machine == 0x1C0:
-                    platform = "ARM"
-                elif machine == 0xAA64:
-                    platform = "ARM64"
-                else:
-                    platform = "Unknown machine type: 0x{machine:04X}"
+                pe = analyze_result
+                buffer = StringIO()
+                sys.stdout = buffer
+                print(pe)
+                with open(f'./upload/{random_name}_exe_details.txt', 'w+') as f:
+                    f.write(buffer.getvalue())
+                sys.stdout = sys.__stdout__
+                del f
+                platform = utils.PE_analyse.analyze_machine(pe)
+                pe.close()
                 if detect_virus(save_file):
                     #TODO 把exe反编译成asm
                     asm_file = exe2asm(data)
@@ -177,25 +181,25 @@ async def upload(file: UploadFile = File(...)):
                 else:
                     result = 'NON-VIRUS'
                     color = 'green'
-            finally:
-                try:
-                    pe.close()
-                except:
-                    pass
-                rmtree('./upload')
                 md5dict[data_md5] = [[result, platform], color]
                 f_md5_json.seek(0) 
                 f_md5_json.truncate()
                 f_md5_json.flush()
                 json.dump(md5dict, f_md5_json)
                 f_md5_json.close()
+                with zipfile.ZipFile(f'./download/{random_name}.zip', 'w') as zip_file:
+                    zip_file.write(f'./upload/{random_name}_exe_details.txt')
+                    if result != 'NON-VIRUS':
+                        zip_file.write(f'./upload/'+random_name+'.asm_3gramfeature.csv')
+                        zip_file.write(f'./upload/'+random_name+'.asm_imgfeature.csv')
+                rmtree('./upload')
             return [[result, platform], color]
         result = judge_file()   
     color = result[-1]
     result = result[0]
     tag = Generate_tag(result) #TODO add more TAG
         
-    return '''
+    html = '''
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -234,6 +238,12 @@ async def upload(file: UploadFile = File(...)):
                     height: auto;
                     margin-top: 20px;
                 }
+                .small {
+                font-size: xx-small;
+                }
+                .larger {
+                font-size: larger;
+                }
                 h1 {
                     font-size: 24px;
                     color: black; /* 文字颜色改为白色 */
@@ -268,10 +278,24 @@ async def upload(file: UploadFile = File(...)):
         <img id="logo" src="/static/logo.png" alt="Logo">
         <p>Size: '''+NumberOfBytesHumanRepresentation(file_size)+'''</p>
         <p>MD5: '''+data_md5+'''</p>
-        <h1 class="'''+color+'''">predict type: '''+tag+'''</h1>
+        <h1 class="'''+color+''' larger">predict type: '''+tag+'''</h1>'''
+    if os.path.exists('./download/'+random_name+'.zip'):
+        html += '''
+        <p></p>
+                <div>
+        <a href="/downloadfile/?file_name='''+random_name+'''.zip" download>Download details</a>
+    </div>
         </body>
         </html>
         '''
-
+    else:
+        html +='''
+                <div>
+        <p class="red small">This file has already been uploaded(same file uploaded)</p>
+    </div>
+        </body>
+        </html>
+        '''
+    return html
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    uvicorn.run(app, host="127.0.0.1", port=1234)
