@@ -1,6 +1,6 @@
 import pefile
+from capstone import *
 MACHINES = {
-    0x0001: "TARGET_HOST",
     0x014c: "I386",          # intel386处理器或后续兼容处理器
     0x0162: "R3000",         # MIPS little-endian, 0x160 big-endian
     0x0166: "R4000",         # MIPS小尾处理器

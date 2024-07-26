@@ -117,9 +117,9 @@ async def get_upload_page():
     <body>
         <img id="logo" src="/static/logo.png" alt="Logo">
         <h1>MalPro v0.1 Beta</h1>
-        <p>Upload your file here (only .exe & ≤8MB files allowed).</p>
+        <p>Upload your file here (only PE & ≤8MB files allowed).</p>
         <form action="/uploadfile/" method="post" enctype="multipart/form-data">
-            <input type="file" name="file" accept=".exe">
+            <input type="file" name="file">
         
             <button type="submit">Upload File</button>
         </form>
@@ -310,4 +310,4 @@ async def upload(file: UploadFile = File(...)):
         '''
     return html
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=1234)
+    uvicorn.run(app, host="127.0.0.1", port=8080)

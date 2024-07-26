@@ -16,6 +16,7 @@ import utils.opcodeandngram as opcodeandngram
 from rich.console import Console
 from shutil import copyfile
 VERSION = 'V0.1 BETA'
+IDA_PATH = input('your IDA path: >>> ')
 resultlist=['Ramnit', 'Lollipop', 'Kelihos_ver3', 'Vundo', 'Simda','Tracur','Kelihos_ver1','Obfuscator.ACY','Gatak']
 def process_upload_asm(asm_file_name):
     filebasename = basename(asm_file_name)
