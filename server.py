@@ -132,6 +132,7 @@ async def get_upload_page():
 async def upload(file: UploadFile = File(...)):
     data = await file.read()
     random_name = str(randint(100000, 999999))
+    is_same = False
     file_size = file.size
     if file_size > 8*1024*1024:
         result=[[f'FILE TOO LARGE ({NumberOfBytesHumanRepresentation(file_size)})', ''], 'red']
@@ -146,8 +147,8 @@ async def upload(file: UploadFile = File(...)):
         f.close()
         del f
         data_md5 = md5(data).hexdigest() #TODO MD5 tmp list
-        def judge_file():
-            # RETURN: [[RESULT, PLATFORM], COLOR]
+        def judge_file(random_name):
+            # RETURN: [[[RESULT, PLATFORM], COLOR], RANDOM_NAME]
             f_md5_json = open('MD5_record_list.json', 'r+')
             try:
                 md5dict = json.load(f_md5_json)
@@ -159,9 +160,9 @@ async def upload(file: UploadFile = File(...)):
             # Caculate some basic informations
             analyze_result = utils.PE_analyse.check_avaliable(save_file)
             if analyze_result == 'Load failed':
-                return [['UNAVALIABLE PE FILE (failed to load)', ''], 'red']
+                return [[['UNAVALIABLE PE FILE (failed to load)', ''], 'red'], random_name]
             elif analyze_result == 'Header broken':
-                return [['UNAVALIABLE PE FILE (header broken)', ''], 'red']
+                return [[['UNAVALIABLE PE FILE (header broken)', ''], 'red'], random_name]
             else:
                 pe = analyze_result
                 buffer = StringIO()
@@ -181,7 +182,7 @@ async def upload(file: UploadFile = File(...)):
                 else:
                     result = 'NON-VIRUS'
                     color = 'green'
-                md5dict[data_md5] = [[result, platform], color]
+                md5dict[data_md5] = [[[result, platform], color], random_name]
                 f_md5_json.seek(0) 
                 f_md5_json.truncate()
                 f_md5_json.flush()
@@ -193,10 +194,13 @@ async def upload(file: UploadFile = File(...)):
                         zip_file.write(f'./upload/'+random_name+'.asm_3gramfeature.csv')
                         zip_file.write(f'./upload/'+random_name+'.asm_imgfeature.csv')
                 rmtree('./upload')
-            return [[result, platform], color]
-        result = judge_file()   
-    color = result[-1]
-    result = result[0]
+            return [[[result, platform], color], random_name]
+        result = judge_file(random_name)   
+    color = result[0][-1]
+    if random_name != result[-1]:
+        is_same = True
+        random_name = result[-1]
+    result = result[0][0]
     tag = Generate_tag(result) #TODO add more TAG
         
     html = '''
@@ -276,8 +280,9 @@ async def upload(file: UploadFile = File(...)):
         </head>
         <body>
         <img id="logo" src="/static/logo.png" alt="Logo">
-        <p>Size: '''+NumberOfBytesHumanRepresentation(file_size)+'''</p>
-        <p>MD5: '''+data_md5+'''</p>
+        <p class="small">Size: '''+NumberOfBytesHumanRepresentation(file_size)+'''</p>
+        <p class="small">MD5: '''+data_md5+'''</p>
+        <p class="small">ID: '''+random_name+'''</p>
         <h1 class="'''+color+''' larger">predict type: '''+tag+'''</h1>'''
     if os.path.exists('./download/'+random_name+'.zip'):
         html += '''
@@ -288,10 +293,17 @@ async def upload(file: UploadFile = File(...)):
         </body>
         </html>
         '''
-    else:
-        html +='''
+    elif result[0][0] == 'UNAVALIABLE PE FILE (failed to load)' or result[0][0] == 'UNAVALIABLE PE FILE (header broken)' or result[0][0] == f'FILE TOO LARGE ({NumberOfBytesHumanRepresentation(file_size)})':
+        pass
+    if is_same:
+        html +=f'''
+        <p></p>
+        <p></p>
+        <p></p>
+        <p></p>
+        <p></p>
                 <div>
-        <p class="red small">This file has already been uploaded(same file uploaded)</p>
+        <p class="red small">This file has already been uploaded(same file uploaded with ID {random_name})</p>
     </div>
         </body>
         </html>
