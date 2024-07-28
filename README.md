@@ -6,7 +6,7 @@
 <img src=https://img.shields.io/badge/State-Developing-red?style=for-the-badge>
 <img src=https://img.shields.io/badge/Platform-Windows-orange?style=for-the-badge>
 <em><h5 align="center">malware analyzer under python3 and machine learning</h5></em>
-<img src=https://github.com/BSDFZ-programming-team/MalPro/blob/main/static/logo.png>
+<img src=https://files.cnblogs.com/files/blogs/820580/logo.ico?t=1722150186&download=true>
 ps: also a project for 上海交通大学人工智能荣昶杯
 
 # Background & Our Ideas
@@ -76,7 +76,7 @@ python server.py
 
 It will run a web server on your host(port 7777) as the frontend of our project, open it and upload your .exe file, you will see a result like this.
 
-![](https://github.com/BSDFZ-programming-team/MalPro/blob/main/static/example.png)
+![](https://files.cnblogs.com/files/blogs/820580/example.ico?t=1722150163&download=true)
 
 download the analyze details if you want. 
 
@@ -104,7 +104,7 @@ copy your data set to /train and your label file to TrainLabels.csv(same label f
 
 it will show a menu like this
 
-![](https://github.com/BSDFZ-programming-team/MalPro/blob/main/static/example2.png)
+![](https://files.cnblogs.com/files/blogs/820580/example2.ico?t=1722150155&download=true)
 
 you can train your model in this script
 
