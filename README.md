@@ -110,7 +110,15 @@ you can train your model in this script
 
 # Contributors
 
-Project by: 北京师范大学南山附属学校荣昶杯比赛开发小组
+Project by:  
+
+WeiLin Du([LamentXU](https://www.cnblogs.com/LAMENTXU))  
+QiXun Zhong([wcnmd-txt](https://github.com/wcnmd-txt))  
+YiFan He([0D00-O721](https://github.com/0D00-O721))  
+
+guided by:  
+
+XiaoBin Peng([handsongPeng](https://github.com/orgs/BSDFZ-programming-team/people/handsongPeng))  
 
 # Reports
 Please send bug reports and feature requests through github issue tracker. Malpro is currently under development now and it's open to any constructive suggestions.
