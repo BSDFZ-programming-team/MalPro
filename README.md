@@ -6,7 +6,7 @@
 <img src=https://img.shields.io/badge/State-Developing-red?style=for-the-badge>
 <img src=https://img.shields.io/badge/Platform-Windows-orange?style=for-the-badge>
 <em><h5 align="center">malware analyzer under python3 and machine learning</h5></em>
-<img src=https://github.com/BSDFZ-programming-team/MalPro/blob/main/static/logo.png>
+<img src=https://files.cnblogs.com/files/blogs/820580/logo.ico?t=1722150186&download=true>
 ps: also a project for 上海交通大学人工智能荣昶杯
 
 # Background & Our Ideas
@@ -25,7 +25,7 @@ When we are doing our research, we have noticed a bunch of project using cnn(or 
 
 Then, we saw a competition held by Microsoft (https://www.kaggle.com/competitions/malware-classification) that use .asm file to classify 9 different types of malware family. 
 
-So could we classify more types of it? We have learned about the ideas of the champions from their blogs, articles and interviews. Finally, we decided that it could be a good idea.
+So could we classify more types of it? We have learned about the blogs, articles and interviews of the champions of this competition. Finally, we decided that classifying by assembly file would be a good idea.
 
 ### Why assembly file?
 
@@ -58,7 +58,7 @@ there is a model trained by us in the project file (model/model.pt), so you can 
 pip -r requirments.txt
 ```
 
-**we recommend you to create a new virtual environment for this project cause it depends on some libraries in old version**
+*TIPS: we recommend you to create a new virtual environment for this project because it depends on some libraries in old version*
 
 ### install IDA pro
 
@@ -76,7 +76,7 @@ python server.py
 
 It will run a web server on your host(port 7777) as the frontend of our project, open it and upload your .exe file, you will see a result like this.
 
-![](https://github.com/BSDFZ-programming-team/MalPro/blob/main/static/example.png)
+![](https://files.cnblogs.com/files/blogs/820580/example.ico?t=1722150163&download=true)
 
 download the analyze details if you want. 
 
@@ -104,7 +104,7 @@ copy your data set to /train and your label file to TrainLabels.csv(same label f
 
 it will show a menu like this
 
-![](https://github.com/BSDFZ-programming-team/MalPro/blob/main/static/example2.png)
+![](https://files.cnblogs.com/files/blogs/820580/example2.ico?t=1722150155&download=true)
 
 you can train your model in this script
 
