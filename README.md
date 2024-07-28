@@ -25,7 +25,7 @@ When we are doing our research, we have noticed a bunch of project using cnn(or 
 
 Then, we saw a competition held by Microsoft (https://www.kaggle.com/competitions/malware-classification) that use .asm file to classify 9 different types of malware family. 
 
-So could we classify more types of it? We have learned about the blogs, articles and interviews of the champions of this competition. Finally, we decided that classifying by assembly file would be a good idea.
+So could we classify more types of it? We have learned about the blogs, articles and interviews published by the champions of this competition. Finally, we decided that classifying by assembly file would be a good idea.
 
 ### Why assembly file?
 
@@ -44,7 +44,7 @@ The powerful features in assembly files are:
 	
 We train our random forest model by using these two features
 
-by the way, we use 1500px for the .asm image features and n=4 for the opgram-ncode features in this project.
+by the way, we use 1500px for the .asm image features and n=3 for the opgram-ncode features in this project.
 
 # Project usage
 
