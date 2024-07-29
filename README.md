@@ -64,7 +64,7 @@ there is a model trained by us in the project file (model/model.pt), so you can 
 *TIPS: We recommend python 3.9 for this*
 
 ```
-pip -r requirments.txt
+pip install -r requirments.txt
 ```
 
 *TIPS: we recommend you to create a new virtual environment for this project because it depends on some libraries in old version*
@@ -103,12 +103,6 @@ Because of the copyright issues, we can't publish the dataset of 79 different be
 copy your data set to /train and your label file to TrainLabels.csv(same label file format in the kaggle challenge)
 
 *TIPS: if your train set is a subset of your label file(rename it to trainLabels_all.csv), use utils/convert.py to fix it.*
-
-**Create a /subtrain folder**
-
-`python randomsubset.py`
-
-*TIPS: if you really don't know what to do, copy your /train and rename it to /subtrain, then run the script above.*
 
 **Run main.py to train the model**
 

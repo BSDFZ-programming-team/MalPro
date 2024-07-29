@@ -21,7 +21,6 @@ def process_upload_asm(asm_file_name):
     filebasename = basename(asm_file_name)
     asmimage.process_ams_imagefeature(asm_file_name)
     tmpfile = opcodeandngram.process_ams_imagefeature(asm_file_name)
-    copyfile('3gramfeature.csv', './model/3gramfeature_fitting_use.csv')
     opcodeandngram.fit_feature_to_model(tmpfile, filebasename)
     with open(f'./upload/{filebasename}_tmp.csv', 'w') as f:
         f.write('Id,Class\n')
@@ -101,11 +100,14 @@ if __name__ == '__main__':
                 stat.update('Training the model based on combining asm image features and opcode 3-gram features......')
                 accu = combine.train()
                 console.log(f'[+] Training DONE, Accuracy: {accu}')
+                copyfile('3gramfeature.csv', './model/3gramfeature_fitting_use.csv')
                 stat.stop()
                 console.log('Training DONE, model saved at ./model.pt')
             elif choice == '99':
                 break
             else:
                 console.log(f'[-] Unknown command {choice}')
-    except:
+    except Exception as e:
+        import traceback
         console.print_exception()
+        print(traceback.print_exc())
