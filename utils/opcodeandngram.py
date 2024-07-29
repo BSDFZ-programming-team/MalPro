@@ -16,28 +16,15 @@ def getOpcodeSequence(filename):
                         opcode_seq.append(opc)
     return opcode_seq
 
-def train_opcode_lm(ops, order=4):
-    lm = defaultdict(Counter)
-    prefix = ["~"] * order
-    prefix.extend(ops)
-    data = prefix
-    for i in range(len(data)-order):
-        history, char = tuple(data[i:i+order]), data[i+order]
-        lm[history][char]+=1
-    def normalize(counter):
-        s = float(sum(counter.values()))
-        return [(c,cnt/s) for c,cnt in counter.iteritems()]
-    outlm = {hist:chars for hist, chars in lm.iteritems()}
-    return outlm
 
 def getOpcodeNgram(ops, n=3):
     opngramlist = [tuple(ops[i:i+n]) for i in range(len(ops)-n)]
     opngram = Counter(opngramlist)
     return opngram
 def train(stat):
-    basepath = "./subtrain/"
+    basepath = "./train/"
     map3gram = defaultdict(Counter)
-    subtrain = pd.read_csv('subtrainLabels.csv')
+    subtrain = pd.read_csv('TrainLabels.csv')
     count = 1
     stat.stop()
     for sid in track(subtrain.Id, description='Extracting Opcode 3-gram feature', total=len(subtrain.Id)):

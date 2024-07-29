@@ -6,7 +6,7 @@ import pandas as pd
 import pickle
 
 def train():
-    subtrainLabel = pd.read_csv('subtrainLabels.csv')
+    subtrainLabel = pd.read_csv('TrainLabels.csv')
     subtrainfeature1 = pd.read_csv("3gramfeature.csv")
     subtrainfeature2 = pd.read_csv("imgfeature.csv")
     subtrain = pd.merge(subtrainfeature1,subtrainfeature2,on='Id')

@@ -4,7 +4,7 @@ from sklearn.metrics import confusion_matrix
 import pandas as pd
 
 
-subtrainLabel = pd.read_csv('subtrainLabels.csv')
+subtrainLabel = pd.read_csv('TrainLabels.csv')
 subtrainfeature = pd.read_csv("3gramfeature.csv")
 subtrain = pd.merge(subtrainLabel,subtrainfeature,on='Id')
 labels = subtrain.Class

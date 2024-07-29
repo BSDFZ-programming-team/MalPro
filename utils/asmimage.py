@@ -16,8 +16,8 @@ def getMatrixfrom_asm(filename, startindex = 0, pixnum = 5000):
 
 
 def train(stat):
-    subtrain = pd.read_csv('subtrainLabels.csv')
-    basepath = "./subtrain/"
+    subtrain = pd.read_csv('TrainLabels.csv')
+    basepath = "./train/"
     mapimg = defaultdict(list)
     i = 0
     stat.stop()

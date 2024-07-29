@@ -5,18 +5,17 @@
 import train_src.combine as combine
 from shutil import rmtree
 from random import randint
-import train_src.firstrandomforest as firstrandomforest
+import train_src.asm_image_model as asm_image_model
 from os import mkdir
 from os.path import exists, basename
 import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
 import utils.asmimage as asmimage
-import utils.randomsubset as randomsubset
 import utils.opcodeandngram as opcodeandngram
 from rich.console import Console
 from shutil import copyfile
 VERSION = 'V0.1 BETA'
-IDA_PATH = input('your IDA path: >>> ')
+# IDA_PATH = input('your IDA path: >>> ')
 resultlist=['Ramnit', 'Lollipop', 'Kelihos_ver3', 'Vundo', 'Simda','Tracur','Kelihos_ver1','Obfuscator.ACY','Gatak']
 def process_upload_asm(asm_file_name):
     filebasename = basename(asm_file_name)
@@ -91,15 +90,13 @@ if __name__ == '__main__':
             elif choice == '1':
                 console.log('[*] Using training file at ./train and ./subtrain')
                 console.log('[*] Using label file at ./TrainLabels.csv')
-                stat = console.status('Spliting subsets randomly......')
+                stat = console.status('Extracting ams image features......')
                 stat.start()
-                randomsubset.main()
-                stat.update('Extracting ams image features......')
                 asmimage.train(stat)
                 stat.update('Extracting Opcode 3-gram features......')
                 opcodeandngram.train(stat)
                 stat.update('Training the model based on asm image features......')
-                accu = firstrandomforest.train()
+                accu = asm_image_model.train()
                 console.log(f'[+] Training DONE, Accuracy: {accu}')
                 stat.update('Training the model based on combining asm image features and opcode 3-gram features......')
                 accu = combine.train()
