@@ -73,7 +73,7 @@ pip -r requirments.txt
 
 install IDA pro (7.x) from [here](https://hex-rays.com/IDA-pro/)
 
-TODO
+TODO: Use IDA to turn PE files into assembly files.
 
 ## Use
 
