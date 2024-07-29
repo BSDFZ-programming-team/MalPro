@@ -35,9 +35,9 @@ def train():
     # ap_score = average_precision_score(y_true=y_test,y_score=rfc_prob)
     # #画出PR曲线
     # precision_recall_curve(estimator=srf,X=X_test,y=y_test,pos_label=1)
-    print(X_test)
-    print(srf.predict(X_test))
-    print(y_test)
+    # print(X_test)
+    # print(srf.predict(X_test))
+    # print(y_test)
 
     return srf.score(X_test,y_test)
 def use(amsfile, tmpfile):
