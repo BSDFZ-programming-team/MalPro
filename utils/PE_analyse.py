@@ -1,5 +1,5 @@
 import pefile
-from capstone import *
+# from capstone import *
 MACHINES = {
     0x014c: "I386",          # intel386处理器或后续兼容处理器
     0x0162: "R3000",         # MIPS little-endian, 0x160 big-endian

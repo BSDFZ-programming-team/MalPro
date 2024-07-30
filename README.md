@@ -119,8 +119,8 @@ you can train your model in this script
 ### Project by:  
 
 WeiLin Du([LamentXU](https://www.cnblogs.com/LAMENTXU))  
-QiXun Zhong([wcnmd-txt](https://github.com/wcnmd-txt))  
 YiFan He([0D00-O721](https://github.com/0D00-O721))  
+QiXun Zhong([ZQX-art](https://github.com/ZQX-art))  
 
 ### guided by:  
 

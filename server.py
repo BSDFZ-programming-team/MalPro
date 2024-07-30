@@ -134,8 +134,9 @@ async def upload(file: UploadFile = File(...)):
     random_name = str(randint(100000, 999999))
     is_same = False
     file_size = file.size
+    data_md5 = md5(data).hexdigest()
     if file_size > 8*1024*1024:
-        result=[[f'FILE TOO LARGE ({NumberOfBytesHumanRepresentation(file_size)})', ''], 'red']
+        result=[[[f'FILE TOO LARGE ({NumberOfBytesHumanRepresentation(file_size)})', ''], 'red'], random_name]
     else:
         fn = random_name+'.exe'
         save_path = f'./upload/'
@@ -146,7 +147,6 @@ async def upload(file: UploadFile = File(...)):
         f.write(data)
         f.close()
         del f
-        data_md5 = md5(data).hexdigest() #TODO MD5 tmp list
         def judge_file(random_name):
             # RETURN: [[[RESULT, PLATFORM], COLOR], RANDOM_NAME]
             f_md5_json = open('MD5_record_list.json', 'r+')
