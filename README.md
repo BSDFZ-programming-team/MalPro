@@ -55,15 +55,29 @@ by the way, we use 1500px for the .asm image features and n=3 for the opgram-nco
 
 # Dataset
 
-## For primrary model (9 malware families)
+*Testing machine: ultra9 32GB cpu*
 
-[kaggle](https://www.kaggle.com/competitions/malware-classification)
+## For primary model (9 malware families)
+
+Dataset: [kaggle](https://www.kaggle.com/competitions/malware-classification)
+
+### Performance
+
+dataset size: 2480 malwares (train:test=9:1)
+malware families: 9 types  
+accuracy: 0.9959677419354839  
+time spent in extracting features: 36s(.asm image features) + 8min34s(opcode-3gram features)  
+time spent in training: less than 10s  
 
 ## For advanced model (582 malware families) 
 
 **STILL DEVELOPING**
 
-[BODMAS dataset](https://whyisyoung.github.io/BODMAS)
+Dataset: [BODMAS dataset](https://whyisyoung.github.io/BODMAS)
+
+### Performance
+
+NONE
 
 # Project usage
 
@@ -87,7 +101,7 @@ install IDA pro (7.x) from [here](https://hex-rays.com/IDA-pro/)
 
 TODO: Use IDA to turn PE files into assembly files.
 
-## Use
+## Examine
 
 ### predict
 
@@ -122,7 +136,7 @@ copy your data set to /train and your label file to TrainLabels.csv(same label f
 
 it will show a menu like this
 
-![](https://files.cnblogs.com/files/blogs/820580/example2.ico?t=1722150155&download=true)
+![](https://files.cnblogs.com/files/blogs/820580/example2.ico?t=1722405816&download=true)
 
 you can train your model in this script
 

@@ -51,9 +51,7 @@ BANNER = f'''
 \_)(_/\_/\_/\____/(__)  (__\_) \__/(_)(__)  (__/  
 [/blue bold][cyan]
 [Version] {VERSION}
-[Author] 北京师范大学南山附属学校小组
-
-注：本项目为上海交通大学AI夏令营比赛项目，代码为项目小组成员编写，遵循Apache2协议！
+[Author] BSDFZ-programming-team
 [/cyan]
 '''
 if __name__ == '__main__':
