@@ -69,7 +69,7 @@ if __name__ == '__main__':
             if choice == '2':
                 if not exists('./upload'):
                     mkdir('./upload')
-                console.log(f'[*] Loading models at ./model/model.pt and ./model/model_backup.pt')
+                console.log(f'[*] Loading models at ./model/model.pt')
                 file_location = input("input the .asm file location : >>> ")
                 if not exists(file_location):
                     console.log('[bold red][-] File not found[/bold red]')
