@@ -38,7 +38,7 @@ So could we classify more types of it? We have learned about the blogs, articles
 
 Features in assembly file are easier to be learned by machines than raw PE file.
 
-We try to prove this as rigorous as possible, but because of the lack of time and cpu(I'm dead serious), we could only say that when only you got only 6000s and one cpu, training random forest models by using assembly file is better than PE file.
+We try to prove this as rigorous as possible, but because of the lack of time and cpu(I'm dead serious), we could only say that when  you got 6000s and one cpu, training random forest models by using assembly file is better than PE file.
 
 If you are interested in it, see [blog](#blog).
 
@@ -100,6 +100,16 @@ pip install -r requirments.txt
 install IDA pro (7.x) from [here](https://hex-rays.com/IDA-pro/)
 
 TODO: Use IDA to turn PE files into assembly files.
+
+## Examples(Quick Use)
+
+```
+python main.py
+```
+
+we upload one malware sample for each kind of the malware families(9 types). You can use main.py to examine the model. 
+
+choose "Predict malware(.asm) directly(using ./model/model.pt)" in the menu and enter the location of one of the examples(or you can download raw PE files of those 9 types of malwares and use IDA to generate assembly files as your own samples), then you will get a predict result.
 
 ## Examine
 
