@@ -73,7 +73,7 @@ time spent in training: less than 10s
 
 **STILL DEVELOPING**
 
-Dataset: [BODMAS dataset](https://whyisyoung.github.io/BODMAS)
+Dataset: [Vx underground dataset](https://vx-underground.org/Samples/Families)
 
 ### Performance
 
@@ -132,7 +132,7 @@ download the analyze details if you want.
 
 **download .asm dataset with labels**
 
-Because the program is still developing, we can't use the BODMAS dataset yet. Instead, you can download the dataset of [kaggle](https://www.kaggle.com/competitions/malware-classification) which contains 9 types of malware famlies
+Because the program is still developing, we can't use the Vx underground dataset yet. Instead, you can download the dataset of [kaggle](https://www.kaggle.com/competitions/malware-classification) which contains 9 types of malware famlies
 
 **create /train folder and TrainLabels.csv**
 
