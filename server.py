@@ -9,8 +9,8 @@ import uvicorn
 import zipfile
 import json
 import utils.PE_analyse
-from hashlib import md5
-from main import process_upload_asm, detect_virus, exe2asm
+from hashlib import sha256
+from main import process_upload_asm, exe2asm, detect_virus
 from shutil import rmtree
 from random import randint
 
@@ -134,7 +134,7 @@ async def upload(file: UploadFile = File(...)):
     random_name = str(randint(100000, 999999))
     is_same = False
     file_size = file.size
-    data_md5 = md5(data).hexdigest()
+    data_md5 = sha256(data).hexdigest()
     if file_size > 8*1024*1024:
         result=[[[f'FILE TOO LARGE ({NumberOfBytesHumanRepresentation(file_size)})', ''], 'red'], random_name]
     else:
@@ -281,7 +281,7 @@ async def upload(file: UploadFile = File(...)):
         <body>
         <img id="logo" src="/static/logo.png" alt="Logo">
         <p class="small">Size: '''+NumberOfBytesHumanRepresentation(file_size)+'''</p>
-        <p class="small">MD5: '''+data_md5+'''</p>
+        <p class="small">HASH(Sha256): '''+data_md5+'''</p>
         <p class="small">ID: '''+random_name+'''</p>
         <h1 class="'''+color+''' larger">predict type: '''+tag+'''</h1>'''
     if os.path.exists('./download/'+random_name+'.zip'):
