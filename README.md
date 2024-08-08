@@ -12,7 +12,7 @@ ps: also a project for 上海交通大学人工智能荣昶杯
 
 > 🚧 **Currently under developing** 🚧
 >
-> Malpro is currently in active development and not usable yet. For now, we only support 9 types of malware families and classifying by using assembly files directly, we will complete more features in the future.
+> Malpro is currently in active development and not usable yet. For now, we only support 9 types of malware families, we will complete more features in the future.
 
 # Background & Our Ideas
 
@@ -150,8 +150,7 @@ python server.py
 
 It will run a web server on your host(port 7777) as the frontend of our project, open it and upload your PE file, you will see a result like this.
 
-**We are now developing features of turning the uploaded PE file to asm by using IDA pro. so for now this server could only give out NON-VIRUS result, that is, we only support assembly file now.** 
-**if you want to predict your assembly file, use main.py.**
+**ONLY SUPPORT 9 TYPES OF MALWARE FAMILIES**
 
 ![](https://files.cnblogs.com/files/blogs/820580/example.ico?t=1722150163&download=true)
 
