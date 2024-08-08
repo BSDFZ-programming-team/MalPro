@@ -6,7 +6,7 @@ import train_src.combine as combine
 from shutil import rmtree
 from random import randint
 import train_src.asm_image_model as asm_image_model
-from os import mkdir
+from os import mkdir, system
 from os.path import exists, basename
 import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
@@ -15,7 +15,12 @@ import utils.opcodeandngram as opcodeandngram
 from rich.console import Console
 from shutil import copyfile
 VERSION = 'V0.1 BETA'
-# IDA_PATH = input('your IDA path: >>> ')
+ida_PATH = input('your IDA path: >>> ')
+if not ida_PATH.endswith('/') or not ida_PATH.endswith('\\'):
+    ida_PATH += '/'
+if not exists(ida_PATH):
+    print('[-] Path not found')
+    exit()
 resultlist=['Ramnit', 'Lollipop', 'Kelihos_ver3', 'Vundo', 'Simda','Tracur','Kelihos_ver1','Obfuscator.ACY','Gatak']
 def process_upload_asm(asm_file_name):
     filebasename = basename(asm_file_name)
@@ -32,15 +37,14 @@ def process_upload_asm(asm_file_name):
         return resultlist[int(result)-1]
 def detect_virus(exe_file_path):
     # 文件黑白判断接口
-    # TODO
-    return False #True -> 文件为病毒；False -> 文件不为病毒
+    #TODO
+    return True #True -> 文件为病毒；False -> 文件不为病毒
 def exe2asm(exe_file_path):
-    # TODO
-    # exe反编译接口
     filename = basename(exe_file_path)
-    # 反编译
-    asm_path = filename.split('.')[0]+'.asm'
+    system(f'{ida_PATH}ida64 -TPortable -Sanalysis.idc "{exe_file_path}"')
+    asm_path = './upload/'+filename+'.asm'
     return asm_path
+# exe2asm(r'D:\idapro_185022\0435b4965ab458ec413317ed74b845d4638dd7e5f99371fd0ff2237c98555ea5')
 TRAIN_DIR = './train'
 TEST_DIR = './test'
 BANNER = f'''

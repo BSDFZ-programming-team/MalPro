@@ -117,7 +117,7 @@ async def get_upload_page():
     <body>
         <img id="logo" src="/static/logo.png" alt="Logo">
         <h1>MalPro v0.1 Beta</h1>
-        <p>Upload your file here (only PE & ≤8MB files allowed).</p>
+        <p>Upload your file here (only PE & ≤1MB files allowed).</p>
         <form action="/uploadfile/" method="post" enctype="multipart/form-data">
             <input type="file" name="file">
         
@@ -135,7 +135,7 @@ async def upload(file: UploadFile = File(...)):
     is_same = False
     file_size = file.size
     data_md5 = sha256(data).hexdigest()
-    if file_size > 8*1024*1024:
+    if file_size > 1024*1024:
         result=[[[f'FILE TOO LARGE ({NumberOfBytesHumanRepresentation(file_size)})', ''], 'red'], random_name]
     else:
         fn = random_name+'.exe'
@@ -149,7 +149,7 @@ async def upload(file: UploadFile = File(...)):
         del f
         def judge_file(random_name):
             # RETURN: [[[RESULT, PLATFORM], COLOR], RANDOM_NAME]
-            f_md5_json = open('MD5_record_list.json', 'r+')
+            f_md5_json = open('MD5_record_list.json', 'w+')
             try:
                 md5dict = json.load(f_md5_json)
             except json.decoder.JSONDecodeError:
@@ -176,7 +176,7 @@ async def upload(file: UploadFile = File(...)):
                 pe.close()
                 if detect_virus(save_file):
                     #TODO 把exe反编译成asm
-                    asm_file = exe2asm(data)
+                    asm_file = exe2asm(save_file)
                     result = process_upload_asm(asm_file)
                     color = 'red'
                 else:
@@ -191,8 +191,8 @@ async def upload(file: UploadFile = File(...)):
                 with zipfile.ZipFile(f'./download/{random_name}.zip', 'w') as zip_file:
                     zip_file.write(f'./upload/{random_name}_exe_details.txt')
                     if result != 'NON-VIRUS':
-                        zip_file.write(f'./upload/'+random_name+'.asm_3gramfeature.csv')
-                        zip_file.write(f'./upload/'+random_name+'.asm_imgfeature.csv')
+                        zip_file.write(f'./upload/'+random_name+'.exe.asm_3gramfeature.csv')
+                        zip_file.write(f'./upload/'+random_name+'.exe.asm_imgfeature.csv')
                 rmtree('./upload')
             return [[[result, platform], color], random_name]
         result = judge_file(random_name)   
