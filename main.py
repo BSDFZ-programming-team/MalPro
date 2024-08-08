@@ -7,7 +7,7 @@ from shutil import rmtree
 from random import randint
 import train_src.asm_image_model as asm_image_model
 from os import mkdir, system
-from os.path import exists, basename
+from os.path import exists, basename, isdir
 import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
 import utils.asmimage as asmimage
@@ -21,6 +21,8 @@ if not ida_PATH.endswith('/') or not ida_PATH.endswith('\\'):
 if not exists(ida_PATH):
     print('[-] Path not found')
     exit()
+if not isdir(ida_PATH):
+    print('[-] Input your install dir, ex: D:/IDApro/')
 resultlist=['Ramnit', 'Lollipop', 'Kelihos_ver3', 'Vundo', 'Simda','Tracur','Kelihos_ver1','Obfuscator.ACY','Gatak']
 def process_upload_asm(asm_file_name):
     filebasename = basename(asm_file_name)
