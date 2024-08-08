@@ -75,7 +75,7 @@ time spent in training: less than 10s
 
 **STILL DEVELOPING**
 
-Dataset: [Vx underground dataset](https://vx-underground.org/Samples/Families) (74 malware families)
+Dataset: [Vx underground dataset](https://vx-underground.org/Samples/Families) (71 malware families)
 
 and Dataset from [kaggle](https://www.kaggle.com/competitions/malware-classification) (9 malware families)
 

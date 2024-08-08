@@ -7,7 +7,7 @@ from shutil import rmtree
 from random import randint
 import train_src.asm_image_model as asm_image_model
 from os import mkdir, system
-from os.path import exists, basename
+from os.path import exists, basename, isdir
 import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
 import utils.asmimage as asmimage
@@ -15,12 +15,6 @@ import utils.opcodeandngram as opcodeandngram
 from rich.console import Console
 from shutil import copyfile
 VERSION = 'V0.1 BETA'
-ida_PATH = input('your IDA path: >>> ')
-if not ida_PATH.endswith('/') or not ida_PATH.endswith('\\'):
-    ida_PATH += '/'
-if not exists(ida_PATH):
-    print('[-] Path not found')
-    exit()
 resultlist=['Ramnit', 'Lollipop', 'Kelihos_ver3', 'Vundo', 'Simda','Tracur','Kelihos_ver1','Obfuscator.ACY','Gatak']
 def process_upload_asm(asm_file_name):
     filebasename = basename(asm_file_name)
@@ -39,7 +33,7 @@ def detect_virus(exe_file_path):
     # 文件黑白判断接口
     #TODO
     return True #True -> 文件为病毒；False -> 文件不为病毒
-def exe2asm(exe_file_path):
+def exe2asm(exe_file_path, ida_PATH):
     filename = basename(exe_file_path)
     system(f'{ida_PATH}ida64 -TPortable -Sanalysis.idc "{exe_file_path}"')
     asm_path = './upload/'+filename+'.asm'

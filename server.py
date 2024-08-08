@@ -32,6 +32,14 @@ def NumberOfBytesHumanRepresentation(value):
         return '%.1f MB' % (float(value) / 1024.0 / 1024.0)
     else:
         return '%.1f GB' % (float(value) / 1024.0 / 1024.0 / 1024.0)
+ida_PATH = input('your IDA path: >>> ')
+if not ida_PATH.endswith('/') or not ida_PATH.endswith('\\'):
+    ida_PATH += '/'
+if not os.path.exists(ida_PATH):
+    print('[-] Path not found')
+    exit()
+if not os.path.isdir(ida_PATH):
+    print('[-] Input your install dir, ex: D:/IDApro/')
 app = FastAPI()
 # fastapi_cdn_host.patch_docs(app, favicon_url='./static/logo.svg')
 # 定义上传文件的目标目录
@@ -176,7 +184,7 @@ async def upload(file: UploadFile = File(...)):
                 pe.close()
                 if detect_virus(save_file):
                     #TODO 把exe反编译成asm
-                    asm_file = exe2asm(save_file)
+                    asm_file = exe2asm(save_file, ida_PATH)
                     result = process_upload_asm(asm_file)
                     color = 'red'
                 else:
