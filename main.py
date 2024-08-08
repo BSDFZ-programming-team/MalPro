@@ -14,8 +14,10 @@ import utils.asmimage as asmimage
 import utils.opcodeandngram as opcodeandngram
 from rich.console import Console
 from shutil import copyfile
+from json import load
+with open('./malware_families_list.json', 'r') as f:
+    resultdict = load(f)
 VERSION = 'V0.1 BETA'
-resultlist=['Ramnit', 'Lollipop', 'Kelihos_ver3', 'Vundo', 'Simda','Tracur','Kelihos_ver1','Obfuscator.ACY','Gatak']
 def process_upload_asm(asm_file_name):
     filebasename = basename(asm_file_name)
     asmimage.process_ams_imagefeature(asm_file_name)
@@ -24,11 +26,11 @@ def process_upload_asm(asm_file_name):
     with open(f'./upload/{filebasename}_tmp.csv', 'w') as f:
         f.write('Id,Class\n')
         f.write(f'{filebasename},0')
-    result = combine.use(asm_file_name, f'./upload/{filebasename}_tmp.csv')
+    result = combine.use(asm_file_name, f'./upload/{filebasename}_tmp.csv')[0]
     if result == 0:
         return 'Unknown .asm file'
     else:
-        return resultlist[int(result)-1]
+        return resultdict[str(result)]
 def detect_virus(exe_file_path):
     # 文件黑白判断接口
     #TODO

@@ -28,7 +28,6 @@ def train(stat):
     count = 1
     stat.stop()
     for sid in track(subtrain.Id, description='Extracting Opcode 3-gram feature', total=len(subtrain.Id)):
-        # print ("counting the 3-gram of the {0} file...".format(str(count)))
         count += 1
         filename = basepath + sid + ".asm"
         ops = getOpcodeSequence(filename)
