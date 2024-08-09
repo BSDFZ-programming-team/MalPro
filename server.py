@@ -167,41 +167,39 @@ async def upload(file: UploadFile = File(...)):
                 return md5dict[data_md5]
             # Caculate some basic informations
             analyze_result = utils.PE_analyse.check_avaliable(save_file)
-            if analyze_result == 'Load failed':
-                return [[['UNAVALIABLE PE FILE (failed to load)', ''], 'red'], random_name]
-            elif analyze_result == 'Header broken':
-                return [[['UNAVALIABLE PE FILE (header broken)', ''], 'red'], random_name]
-            else:
-                pe = analyze_result
-                buffer = StringIO()
-                sys.stdout = buffer
-                print(pe)
-                with open(f'./upload/{random_name}_exe_details.txt', 'w+') as f:
-                    f.write(buffer.getvalue())
-                sys.stdout = sys.__stdout__
-                del f
+            pe = analyze_result
+            buffer = StringIO()
+            sys.stdout = buffer
+            print(pe)
+            with open(f'./upload/{random_name}_exe_details.txt', 'w+') as f:
+                f.write(buffer.getvalue())
+            sys.stdout = sys.__stdout__
+            del f
+            try:
                 platform = utils.PE_analyse.analyze_machine(pe)
                 pe.close()
-                if detect_virus(save_file):
-                    #TODO 把exe反编译成asm
-                    asm_file = exe2asm(save_file, ida_PATH)
-                    result = process_upload_asm(asm_file)
-                    color = 'red'
-                else:
-                    result = 'NON-VIRUS'
-                    color = 'green'
-                md5dict[data_md5] = [[[result, platform], color], random_name]
-                f_md5_json.seek(0) 
-                f_md5_json.truncate()
-                f_md5_json.flush()
-                json.dump(md5dict, f_md5_json)
-                f_md5_json.close()
-                with zipfile.ZipFile(f'./download/{random_name}.zip', 'w') as zip_file:
-                    zip_file.write(f'./upload/{random_name}_exe_details.txt')
-                    if result != 'NON-VIRUS':
-                        zip_file.write(f'./upload/'+random_name+'.exe.asm_3gramfeature.csv')
-                        zip_file.write(f'./upload/'+random_name+'.exe.asm_imgfeature.csv')
-                rmtree('./upload')
+            except:
+                platform = ''
+            if detect_virus(save_file):
+                #TODO 把exe反编译成asm
+                asm_file = exe2asm(save_file, ida_PATH)
+                result = process_upload_asm(asm_file)
+                color = 'red'
+            else:
+                result = 'NON-VIRUS'
+                color = 'green'
+            md5dict[data_md5] = [[[result, platform], color], random_name]
+            f_md5_json.seek(0) 
+            f_md5_json.truncate()
+            f_md5_json.flush()
+            json.dump(md5dict, f_md5_json)
+            f_md5_json.close()
+            with zipfile.ZipFile(f'./download/{random_name}.zip', 'w') as zip_file:
+                zip_file.write(f'./upload/{random_name}_exe_details.txt')
+                if result != 'NON-VIRUS':
+                    zip_file.write(f'./upload/'+random_name+'.exe.asm_3gramfeature.csv')
+                    zip_file.write(f'./upload/'+random_name+'.exe.asm_imgfeature.csv')
+            rmtree('./upload')
             return [[[result, platform], color], random_name]
         result = judge_file(random_name)   
     color = result[0][-1]

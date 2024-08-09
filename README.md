@@ -12,7 +12,7 @@ ps: also a project for 上海交通大学人工智能荣昶杯
 
 > 🚧 **Currently under developing** 🚧
 >
-> Malpro is currently in active development and not usable yet. For now, we only support 9 types of malware families, we will complete more features in the future.
+> Malpro is currently in active development and not usable yet. For now, we only support 17 types of malware families, we will complete more features in the future.
 
 # Background & Our Ideas
 
@@ -24,7 +24,7 @@ Our project can classify 80 types of malware families.
 
 All families we supported is in malware_families_list.json
 
-**And for the Beta version, only 9 types is supported, we are still searching for a way to train a better model that could classify 80 types of malware families.**
+**And for the Beta version, only 17 types is supported, we are still searching for a way to train a better model that could classify 80 types of malware families.**
 
 ## Our ideas
 
@@ -57,7 +57,7 @@ by the way, we use 1500px for the .asm image features and n=3 for the opgram-nco
 
 # Dataset
 
-*Testing machine: ultra9 32GB cpu*
+*Testing machine: ultra7 32GB cpu*
 
 ## For primary model (9 malware families)
 
@@ -154,9 +154,9 @@ python server.py
 
 It will run a web server on your host(port 7777) as the frontend of our project, open it and upload your PE file, you will see a result like this.
 
-**ONLY SUPPORT 9 TYPES OF MALWARE FAMILIES**
+**ONLY SUPPORT 17 TYPES OF MALWARE FAMILIES**
 
-![](https://files.cnblogs.com/files/blogs/820580/example.ico?t=1722150163&download=true)
+![image](https://files.cnblogs.com/files/blogs/820580/example.ico?t=1723192821&download=true)
 
 download the analyze details if you want. 
 
@@ -178,7 +178,7 @@ copy your data set to /train and your label file to TrainLabels.csv(same label f
 
 it will show a menu like this
 
-![](https://files.cnblogs.com/files/blogs/820580/example2.ico?t=1722405816&download=true)
+![image](https://files.cnblogs.com/files/blogs/820580/example2.ico?t=1723186123&download=true)
 
 you can train your model in this script
 
