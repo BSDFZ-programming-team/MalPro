@@ -91,13 +91,11 @@ there is a model trained by us in the project file (model/model.pt), so you can 
 
 ### install python libraries
 
-*TIPS: we recommend python 3.9 for this*
-
 ```
 pip install -r requirments.txt
 ```
 
-*TIPS: we recommend you to create a new virtual environment for this project because it depends on some libraries in old version*
+*TIPS: we recommend you to create a new python 3.9 virtual environment for this project because it depends on some libraries in old version*
 
 ### install IDA pro
 
@@ -107,7 +105,8 @@ install IDA pro (7.x) from [here](https://hex-rays.com/IDA-pro/)
 
 ![image](https://files.cnblogs.com/files/blogs/820580/image.ico?t=1723102253&download=true)
 
-line42: 
+line41: 
+
 from
 ```
 gen_file(OFILE_ASM, fhandle, 0, BADADDR, 0); // create the assembler file  
@@ -122,6 +121,7 @@ gen_file(OFILE_LST, fhandle, 0, BADADDR, 0); // create the assembler file
 ![image](https://files.cnblogs.com/files/blogs/820580/example4.ico?t=1723102635&download=true)
 
 line 399:
+
 from
 ```
 OPCODE_BYTES            = 0   // display this many instruction/data bytes (0 to disable)
@@ -138,7 +138,9 @@ OPCODE_BYTES            = 16   // display this many instruction/data bytes (0 to
 python main.py
 ```
 
-we upload one malware sample for each kind of the malware families(9 types). You can use main.py to examine the model. 
+we upload one malware sample for each kind of the malware families(17 types). You can use main.py to examine the model. 
+
+The 17 types of malware families are in malware_families_list.json with ID 1-16 and 18
 
 choose "Predict malware(.asm) directly(using ./model/model.pt)" in the menu and enter the location of one of the examples(or you can download raw PE files of those 9 types of malwares and use IDA to generate assembly files as your own samples), then you will get a predict result.
 

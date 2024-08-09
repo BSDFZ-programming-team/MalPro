@@ -61,8 +61,9 @@ if __name__ == '__main__':
         while True:
             console.print('''
         [cyan]menu:
-            [1] Train a model
+            [1] Extract features & Train a model
             [2] Predict malware(.asm) directly(using ./model/model.pt)
+            [3] Train a model directly(with features already extracted)
             [99] Exit[/cyan]
         ''')
             choice = input(': >>> ')
@@ -95,6 +96,20 @@ if __name__ == '__main__':
                 # stat.update('Training the model based on asm image features......')
                 # accu = asm_image_model.train()
                 # console.log(f'[+] Training DONE, Accuracy: {accu}')
+                stat.update('Training the model based on combining asm image features and opcode 3-gram features......')
+                accu = combine.train()
+                console.log(f'[+] Training DONE, Accuracy: {accu}')
+                copyfile('3gramfeature.csv', './model/3gramfeature_fitting_use.csv')
+                stat.stop()
+                console.log('Training DONE, model saved at ./model.pt')
+            elif choice == '3':
+                stat = console.status('Checking features files......')
+                stat.start()
+                if not exists('3gramfeature.csv') or not exists('imgfeature.csv'):
+                    stat.stop()
+                    console.log('[-] Feature file not found. Please extract your features first.')
+                else:
+                    console.log('[*] Feature file found: 3gramfeature.csv & imgfeature.csv')
                 stat.update('Training the model based on combining asm image features and opcode 3-gram features......')
                 accu = combine.train()
                 console.log(f'[+] Training DONE, Accuracy: {accu}')
