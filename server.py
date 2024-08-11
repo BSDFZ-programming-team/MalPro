@@ -40,6 +40,8 @@ if not os.path.exists(ida_PATH):
     exit()
 if not os.path.isdir(ida_PATH):
     print('[-] Input your install dir, ex: D:/IDApro/')
+if not 'idat64.exe' in os.listdir(ida_PATH):
+    print('[-] idat64.exe missing')
 app = FastAPI()
 # fastapi_cdn_host.patch_docs(app, favicon_url='./static/logo.svg')
 # 定义上传文件的目标目录
@@ -127,9 +129,10 @@ async def get_upload_page():
         <h1>MalPro v0.1 Beta</h1>
         <p>Upload your file here (only PE & ≤1MB files allowed).</p>
         <form action="/uploadfile/" method="post" enctype="multipart/form-data">
+            <script type="text/javascript" src="/js/fileuploader.js"></script>
             <input type="file" name="file">
-        
             <button type="submit">Upload File</button>
+            <div id="feedback"></div>
         </form>
         <div class="message" id="message"></div>
     </body>
@@ -195,10 +198,10 @@ async def upload(file: UploadFile = File(...)):
             json.dump(md5dict, f_md5_json)
             f_md5_json.close()
             with zipfile.ZipFile(f'./download/{random_name}.zip', 'w') as zip_file:
-                zip_file.write(f'./upload/{random_name}_exe_details.txt')
+                zip_file.write(f'./upload/{random_name}_exe_details.txt', random_name+'PE_details.txt')
                 if result != 'NON-VIRUS':
-                    zip_file.write(f'./upload/'+random_name+'.exe.asm_3gramfeature.csv')
-                    zip_file.write(f'./upload/'+random_name+'.exe.asm_imgfeature.csv')
+                    zip_file.write(f'./upload/'+random_name+'.exe.asm_3gramfeature.csv', './features/'+random_name+'_3gramfeature.csv')
+                    zip_file.write(f'./upload/'+random_name+'.exe.asm_imgfeature.csv', './features/'+random_name+'_imgfeature.csv')
             rmtree('./upload')
             return [[[result, platform], color], random_name]
         result = judge_file(random_name)   

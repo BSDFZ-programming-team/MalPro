@@ -40,7 +40,6 @@ def exe2asm(exe_file_path, ida_PATH):
     system(f'{ida_PATH}ida64 -TPortable -Sanalysis.idc "{exe_file_path}"')
     asm_path = './upload/'+filename+'.asm'
     return asm_path
-# exe2asm(r'D:\idapro_185022\0435b4965ab458ec413317ed74b845d4638dd7e5f99371fd0ff2237c98555ea5')
 TRAIN_DIR = './train'
 TEST_DIR = './test'
 BANNER = f'''

@@ -4,49 +4,77 @@ from sklearn.metrics import confusion_matrix
 import os
 import pandas as pd
 import pickle
-
+from sklearn.metrics import classification_report
 def train():
     subtrainLabel = pd.read_csv('TrainLabels.csv')
     subtrainfeature1 = pd.read_csv("3gramfeature.csv")
-    subtrainfeature2 = pd.read_csv("imgfeature.csv")
-    subtrain = pd.merge(subtrainfeature1,subtrainfeature2,on='Id')
-    subtrain = pd.merge(subtrain,subtrainLabel,on='Id')
+    # subtrainfeature2 = pd.read_csv("../imgfeature.csv")
+    # subtrain = pd.merge(subtrainfeature1,subtrainfeature2,on='Id')
+    subtrain = pd.merge(subtrainfeature1,subtrainLabel,on='Id')
     labels = subtrain.Class
     subtrain.drop(["Class","Id"], axis=1, inplace=True)
     subtrain = subtrain.values
-
     X_train, X_test, y_train, y_test = model_selection.train_test_split(subtrain,labels,test_size=0.1)
-
-    srf = RF(n_estimators=500, n_jobs=-1)
+    srf = RF(n_estimators=137, n_jobs=-1)
     srf.fit(X_train,y_train)
+    y_pred = srf.predict(X_test)
+    print(classification_report(y_test, y_pred))
     # print(X_test)
     # print(y_test)
     with open('./model/model.pt', 'wb') as f:
         pickle.dump(srf,f)
 
-    # from sklearn.metrics import classification_report,roc_auc_score,roc_curve
-    # from sklearn.metrics import average_precision_score,precision_recall_curve
-    
-    # result = classification_report(y_test, srf.predict(X_test))
-    # rfc_prob = srf.predict_proba(X_test)[:,1]
-    # #输出AUC的值
-    # auc_score = roc_auc_score(y_true=y_test,y_score=rfc_prob)
-    # #输出AP值
-    # ap_score = average_precision_score(y_true=y_test,y_score=rfc_prob)
-    # #画出PR曲线
-    # precision_recall_curve(estimator=srf,X=X_test,y=y_test,pos_label=1)
-    # print(X_test)
-    # print(srf.predict(X_test))
-    # print(y_test)
-
     return srf.score(X_test,y_test)
+def random_forest_parameter_tuning1():
+    subtrainLabel = pd.read_csv('../TrainLabels.csv')
+    subtrainfeature1 = pd.read_csv("../3gramfeature.csv")
+    # subtrainfeature2 = pd.read_csv("../imgfeature.csv")
+    # subtrain = pd.merge(subtrainfeature1,subtrainfeature2,on='Id')
+    subtrain = pd.merge(subtrainfeature1,subtrainLabel,on='Id')
+    labels = subtrain.Class
+    subtrain.drop(["Class","Id"], axis=1, inplace=True)
+    subtrain = subtrain.values
+    from sklearn.model_selection import cross_val_score
+    import matplotlib.pyplot as plt
+    from tqdm import tqdm
+    cross = []
+    for i  in tqdm(range(135,145,1)):
+        rf = RF(n_estimators=i+1, n_jobs=-1,random_state=42)
+        cross_score = cross_val_score(rf, subtrain, labels, cv=5).mean()
+        cross.append(cross_score)
+    plt.plot(range(136,146,1),cross)
+    plt.xlabel('n_estimators')
+    plt.ylabel('acc')
+    plt.show()
+    print((cross.index(max(cross))*10)+1,max(cross))
+def random_forest_parameter_tuning2():
+    import numpy as np
+    subtrainLabel = pd.read_csv('../TrainLabels.csv')
+    subtrainfeature1 = pd.read_csv("../3gramfeature.csv")
+    subtrainfeature2 = pd.read_csv("../imgfeature.csv")
+    subtrain = pd.merge(subtrainfeature1,subtrainfeature2,on='Id')
+    subtrain = pd.merge(subtrain,subtrainLabel,on='Id')
+    labels = subtrain.Class
+    subtrain.drop(["Class","Id"], axis=1, inplace=True)
+    subtrain = subtrain.values
+    from sklearn.model_selection import GridSearchCV
+    #调整max_depth
+    param_grid = {'max_depth' : np.arange(1,20,1)}
+    #一般根据数据大小进行尝试，像该数据集 可从1-10 或1-20开始
+    rf = RF(n_estimators=137,random_state=42)
+    GS = GridSearchCV(rf,param_grid,cv=5)
+    GS.fit(subtrain,labels)
+    print(GS.best_params_)  #最佳参数组合
+    print(GS.best_score_)   #最佳得分
+# random_forest_parameter_tuning2()
+# random_forest_parameter_tuning()
 def use(amsfile, tmpfile):
     filename = os.path.basename(amsfile)
     subtrainLabel = pd.read_csv(tmpfile)
     subtrainfeature1 = pd.read_csv(f"./upload/{filename}_3gramfeature.csv")
-    subtrainfeature2 = pd.read_csv(f"./upload/{filename}_imgfeature.csv")
-    subtrain = pd.merge(subtrainfeature1,subtrainfeature2,on='Id')
-    subtrain = pd.merge(subtrain,subtrainLabel,on='Id')
+    # subtrainfeature2 = pd.read_csv("../imgfeature.csv")
+    # subtrain = pd.merge(subtrainfeature1,subtrainfeature2,on='Id')
+    subtrain = pd.merge(subtrainfeature1,subtrainLabel,on='Id')
     # labels = subtrain.Class
     subtrain.drop(["Class","Id"], axis=1, inplace=True)
     subtrain = subtrain.values
