@@ -13,7 +13,6 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 import utils.asmimage as asmimage
 import utils.opcodeandngram as opcodeandngram
 from rich.console import Console
-from shutil import copyfile
 from json import load
 with open('./malware_families_list.json', 'r') as f:
     resultdict = load(f)
@@ -98,7 +97,11 @@ if __name__ == '__main__':
                 stat.update('Training the model based on combining asm image features and opcode 3-gram features......')
                 accu = combine.train()
                 console.log(f'[+] Training DONE, Accuracy: {accu}')
-                copyfile('3gramfeature.csv', './model/3gramfeature_fitting_use.csv')
+                # copyfile('3gramfeature.csv', './model/3gramfeature_fitting_use.csv')
+                with open('3gramfeature.csv', 'r') as rf:
+                    opcodes = rf.readline()
+                with open('./model/3gramfeature_fitting_use.csv', 'w+') as f:
+                    f.write(opcodes)
                 stat.stop()
                 console.log('Training DONE, model saved at ./model.pt')
             elif choice == '3':
@@ -112,7 +115,10 @@ if __name__ == '__main__':
                 stat.update('Training the model based on combining asm image features and opcode 3-gram features......')
                 accu = combine.train()
                 console.log(f'[+] Training DONE, Accuracy: {accu}')
-                copyfile('3gramfeature.csv', './model/3gramfeature_fitting_use.csv')
+                with open('3gramfeature.csv', 'r') as rf:
+                    opcodes = rf.readline()
+                with open('./model/3gramfeature_fitting_use.csv', 'w+') as f:
+                    f.write(opcodes)
                 stat.stop()
                 console.log('Training DONE, model saved at ./model.pt')
             elif choice == '99':
