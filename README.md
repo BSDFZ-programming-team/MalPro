@@ -151,7 +151,7 @@ It will run a web server on your host(port 7777) as the frontend of our project,
 
 **ONLY SUPPORT 61 TYPES OF MALWARE FAMILIES**  
 
-![image](https://files.cnblogs.com/files/blogs/820580/example.ico?t=1723192821&download=true)
+![image](https://files.cnblogs.com/files/blogs/820580/example.ico?t=1723649092&download=true)
 
 download the analyze details if you want. 
 

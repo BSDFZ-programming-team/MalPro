@@ -9,8 +9,8 @@ import uvicorn
 import zipfile
 import json
 import utils.PE_analyse
-from hashlib import sha256
-from main import process_upload_asm, exe2asm, detect_virus
+from hashlib import sha256, md5
+from main import process_upload_asm, exe2asm, detect_virus, getfeaturenum
 from shutil import rmtree
 from random import randint
 
@@ -118,6 +118,50 @@ async def get_upload_page():
                 font-size: 24px;
                 color: black; /* 文字颜色改为白色，以便在背景上更清晰 */
             }
+                              .enter-x-left {
+        z-index: 9;
+        opacity: 0;
+        animation: enter-x-left 0.4s ease-in-out 0.3s;
+        animation-fill-mode: forwards;
+        transform: translateX(-50px);
+      }
+      .enter-x-right {
+        z-index: 9;
+        opacity: 0;
+        animation: enter-x-right 0.4s ease-in-out 0.3s;
+        animation-fill-mode: forwards;
+        transform: translateX(50px);
+      }
+      .enter-x-left:nth-child(1),
+      .enter-x-right:nth-child(1) {
+        animation-delay: 0.1s;
+      }
+      .enter-x-left:nth-child(2),
+      .enter-x-right:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .enter-x-left:nth-child(3),
+      .enter-x-right:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+      .enter-x-left:nth-child(4),
+      .enter-x-right:nth-child(4) {
+        animation-delay: 0.4s;
+      }
+      
+
+      @keyframes enter-x-left {
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      @keyframes enter-x-right {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
             form {
                 margin-top: 20px;
             }
@@ -147,23 +191,9 @@ async def get_upload_page():
         </style>
     </head>
     <body>
+
         <div class="container">
-          <div class="circle-container">
-    <div class="circle"></div>
-  </div>
-  <div class="circle-container">
-    <div class="circle"></div>
-  </div>
-  <div class="circle-container">
-    <div class="circle"></div>
-  </div>
-  <div class="circle-container">
-    <div class="circle"></div>
-  </div>
-  <div class="circle-container">
-    <div class="circle"></div>
-  </div>
-        <div class="box">
+        <div class="box enter-x-left">
     <div class="text_display">
         <img id="logo" src="/static/logo.png" alt="Logo">
         <h1>MalPro v0.1 Beta</h1>
@@ -178,7 +208,7 @@ async def get_upload_page():
     </div>
         </div>
         </div>
-        <div class="box">
+        <div class="box enter-x-right">
     <div class="fire">
            <svg class="flameSVG" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
 
@@ -295,19 +325,20 @@ async def upload(file: UploadFile = File(...)):
     tag = Generate_tag(result) #TODO add more TAG
         
     html = '''
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta http-equiv="X-UA-Compatible" content="IE=edge">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>MalPro v0.1 BETA</title>
-            <style>
-                @font-face {
-                    font-family: 'good_font';
-                    src: url('/fonts/good_font.ttf') format('truetype');
-                }
-                .green{
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>     
+        <link id="favicon" rel="icon" type="image/x-icon" href="static/favicon.ico">
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>MalPro v0.1 BETA</title>
+        <style>
+            @font-face {
+                font-family: 'good_font';
+                src: url('/fonts/good_font.ttf') format('truetype');
+            }
+                          .green{
             color:green;
             font-size:20px;
         }
@@ -315,74 +346,182 @@ async def upload(file: UploadFile = File(...)):
             color:red;
             font-size:20px;
         }
-                body {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: center;
-                    height: 100vh;
-                    margin: 0;
-                    font-family: 'good_font', Arial, sans-serif;
-                    background-image: url('/static/background.png'); /* 设置背景图片 */
-                    background-size: cover; /* 背景图片覆盖整个页面 */
-                    background-repeat: no-repeat; /* 背景图片不重复 */
-                    background-position: center; /* 背景图片居中显示 */
-                }
-                #logo {
-                    width: 300px;
-                    height: auto;
-                    margin-top: 20px;
-                }
-                .small {
-                font-size: xx-small;
-                }
-                .larger {
-                font-size: larger;
-                }
-                h1 {
-                    font-size: 24px;
-                    color: black; /* 文字颜色改为白色 */
-                }
-                form {
-                    margin-top: 20px;
-                }
-                button {
-                    padding: 10px 20px;
-                    background-color: #4CAF50;
-                    color: white;
-                    border: none;
-                    cursor: pointer;
-                    border-radius: 4px;
-                    font-size: 16px;
-                    transition: background-color 0.3s;
-                }
-                button:hover {
-                    background-color: #45a049;
-                }
-                button:active {
-                    background-color: #367b36;
-                }
-                .message {
-                    margin-top: 20px;
-                    font-size: 18px;
-                    color: white; /* 文字颜色改为白色 */
-                }
-            </style>
-        </head>
-        <body>
+            .text_display {
+                flex: left;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+                margin: 0;
+                font-family: 'good_font', Arial, sans-serif;
+            }
+                  .enter-x-left {
+        z-index: 9;
+        opacity: 0;
+        animation: enter-x-left 0.4s ease-in-out 0.3s;
+        animation-fill-mode: forwards;
+        transform: translateX(-50px);
+      }
+      .enter-x-right {
+        z-index: 9;
+        opacity: 0;
+        animation: enter-x-right 0.4s ease-in-out 0.3s;
+        animation-fill-mode: forwards;
+        transform: translateX(50px);
+      }
+      .enter-x-left:nth-child(1),
+      .enter-x-right:nth-child(1) {
+        animation-delay: 0.1s;
+      }
+      .enter-x-left:nth-child(2),
+      .enter-x-right:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .enter-x-left:nth-child(3),
+      .enter-x-right:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+      .enter-x-left:nth-child(4),
+      .enter-x-right:nth-child(4) {
+        animation-delay: 0.4s;
+      }
+      
+
+      @keyframes enter-x-left {
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      @keyframes enter-x-right {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+            .details_display {
+                flex: left;
+                display: flex;
+                flex-direction: column;
+                align-items: left;
+                justify-content: left;
+                height: 100vh;
+                margin: 0;
+                font-family: 'good_font', Arial, sans-serif;
+            }
+            .container{
+                overflow: hiddden;
+                display: flex;
+                background-color: #eaeaea;
+            }            
+            .box {
+                float: left;
+                width: 100%;
+                height: 50%;
+                margin-right: 10px;
+            }         
+            .fire{
+                flex: right;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+                margin: 0;
+            }
+            
+            #logo {
+                width: 300px;
+                height: auto;png
+                margin-top: 20px;
+            }
+            h1 {
+                font-size: 24px;
+                color: black; 
+            }
+            form {
+                margin-top: 20px;
+            }
+            .message {
+                margin-top: 20px;
+                font-size: 18px;
+                color: blue;
+                font-family: 'good_font', Arial, sans-serif;
+                                justify-content: top;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+        <div class="box enter-x-left">
+    <div class="text_display">
         <img id="logo" src="/static/logo.png" alt="Logo">
-        <p class="small">Size: '''+NumberOfBytesHumanRepresentation(file_size)+'''</p>
-        <p class="small">HASH(Sha256): '''+data_md5+'''</p>
-        <p class="small">ID: '''+random_name+'''</p>
-        <h1 class="'''+color+''' larger">predict type: '''+tag+'''</h1>'''
+        <h1>MalPro v0.1 Beta</h1>
+        <h3 class="'''+color+''' larger">predict type: '''+tag+'''</h3>    
+<svg class="flameSVG" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+
+	<defs> 
+		<rect class="flame" x="400" y="310" width="5" height="5" rx="0.5"  ry="0.5" fill="#FFDD02"/>
+		<circle class="spark" cx="400" cy="300" r="0.05" fill="#FFDD02"/>
+		<filter id="shadow" x="-100%" y="-100%" width="250%" height="250%">
+			<feOffset in="SourceAlpha" dx="4" dy="4" result="offsetOut"></feOffset>        
+			<feGaussianBlur stdDeviation="3" in="offsetOut" result="drop" />
+			<feOffset dx="0" dy="0" result="offsetblur"></feOffset>
+			<feFlood id="glowAlpha" flood-color="#0F1217" flood-opacity="0.42"></feFlood>
+			<feComposite in2="offsetblur" operator="in"></feComposite>
+			<feMerge>
+				<feMergeNode/>          
+				<feMergeNode in="SourceGraphic"></feMergeNode>
+			</feMerge>
+		</filter>   
+	</defs>
+	
+	<g class="whole">
+		<g class="flameContainer" />
+		<g class="sparksContainer" />
+		<g class="logs" opacity="1">
+			<path d="M446.68,299.63l-91.46,29.22a3,3,0,0,1-3.68-2.12L349.2,318a3,3,0,0,1,2.12-3.68l91.46-29.22a3,3,0,0,1,3.68,2.12L448.8,296A3,3,0,0,1,446.68,299.63Z" fill="#612e25"/>
+			<path filter="url(#shadow)" d="M349.2,296l2.34-8.69a3,3,0,0,1,3.68-2.12l91.46,29.22A3,3,0,0,1,448.8,318l-2.34,8.69a3,3,0,0,1-3.68,2.12l-91.46-29.22A3,3,0,0,1,349.2,296Z" fill="#70392f"/>
+		</g>
+	</g>
+
+	<rect class="hit" width="200" height="260" x="300" y="230" fill="transparent">
+	</rect>
+
+</svg>
+
+<script src='../js/TweenMax.min.js'></script>
+<script src='../js/CustomEase.min.js'></script>
+<script src="../js/index.js"></script>
+        </div>
+        </div>
+        <div class="box">
+<div class="details_display enter-x-right">                            
+'''
     if os.path.exists('./download/'+random_name+'.zip'):
         html += '''
         <p></p>
+        <p></p>
+        <h2>FILE INFO</h2>
+        <p>&emsp;Size: '''+NumberOfBytesHumanRepresentation(file_size)+'''</p>
+        <p>&emsp;ID: '''+random_name+'''</p>
+        <p>&emsp;Filename: '''+file.filename+'''</p>
+        <h5&emsp;Hash</h5>
+        <p>&emsp;&emsp;Sha256: '''+data_md5+'''</p>
+        <p>&emsp;&emsp;MD5: '''+md5(data).hexdigest()+'''</p>
+                <h2>ANALYZE DETAILS</h2>
+
                 <div>
-        <a href="/downloadfile/?file_name='''+random_name+'''.zip" download>Download details</a>
+        <a href="/downloadfile/?file_name='''+random_name+'''.zip" download>Download PE & feature details</a>
     </div>
-        </body>
-        </html>
+        <h2>MODEL INFO</h2>
+        <h5>&emsp;Asmimage features</h5>
+        <p>&emsp;&emsp;Deprecated</p>
+        <h5>&emsp;Opcode-ngram features</h5>
+        <p>&emsp;&emsp;n: 3</p>
+        <p>&emsp;&emsp;loaded features: '''+str(getfeaturenum())+'''</p>
+    
         '''
     elif result[0][0] == 'UNAVALIABLE PE FILE (failed to load)' or result[0][0] == 'UNAVALIABLE PE FILE (header broken)' or result[0][0] == f'FILE TOO LARGE ({NumberOfBytesHumanRepresentation(file_size)})':
         pass
@@ -399,6 +538,15 @@ async def upload(file: UploadFile = File(...)):
         </body>
         </html>
         '''
+    html += f'''
+<div>
+        <a href="https://github.com/BSDFZ-programming-team/MalPro" class="message">Need Help?</a>
+    </div>
+</div></div>
+        </div>
+    </body>
+    </html>
+'''
     return html
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=7777)

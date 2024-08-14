@@ -5,6 +5,7 @@
 import train_src.combine as combine
 from shutil import rmtree
 from random import randint
+from pandas import read_csv
 import train_src.asm_image_model as asm_image_model
 from os import mkdir, system
 from os.path import exists, basename, isdir
@@ -30,6 +31,11 @@ def process_upload_asm(asm_file_name):
         return 'Unknown .asm file'
     else:
         return resultdict[str(result)]
+def getfeaturenum():
+    df_first_row = read_csv('./model/3gramfeature_fitting_use.csv', nrows=1, header=None)
+    first_row = df_first_row.values.tolist()[0]
+    first_row.pop(0)
+    return len(first_row)
 def detect_virus(exe_file_path):
     # 文件黑白判断接口
     #TODO
