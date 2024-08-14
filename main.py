@@ -9,7 +9,7 @@ import train_src.asm_image_model as asm_image_model
 from os import mkdir, system
 from os.path import exists, basename, isdir
 import warnings
-warnings.filterwarnings("ignore", category=FutureWarning)
+warnings.filterwarnings("ignore")
 import utils.asmimage as asmimage
 import utils.opcodeandngram as opcodeandngram
 from rich.console import Console
@@ -94,7 +94,7 @@ if __name__ == '__main__':
                 # stat.update('Training the model based on asm image features......')
                 # accu = asm_image_model.train()
                 # console.log(f'[+] Training DONE, Accuracy: {accu}')
-                stat.update('Training the model based on combining asm image features and opcode 3-gram features......')
+                stat.update('Training the model based on opcode 3-gram features......')
                 accu = combine.train()
                 console.log(f'[+] Training DONE, Accuracy: {accu}')
                 # copyfile('3gramfeature.csv', './model/3gramfeature_fitting_use.csv')
@@ -112,7 +112,7 @@ if __name__ == '__main__':
                     console.log('[-] Feature file not found. Please extract your features first.')
                 else:
                     console.log('[*] Feature file found: 3gramfeature.csv & imgfeature.csv')
-                stat.update('Training the model based on combining asm image features and opcode 3-gram features......')
+                stat.update('Training the model based on opcode 3-gram features......')
                 accu = combine.train()
                 console.log(f'[+] Training DONE, Accuracy: {accu}')
                 with open('3gramfeature.csv', 'r') as rf:
