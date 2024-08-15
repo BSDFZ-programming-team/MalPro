@@ -17,7 +17,7 @@ from rich.console import Console
 from json import load
 with open('./malware_families_list.json', 'r') as f:
     resultdict = load(f)
-VERSION = 'V0.1 BETA'
+VERSION = 'V0.7.5 BETA'
 def process_upload_asm(asm_file_name):
     filebasename = basename(asm_file_name)
     asmimage.process_ams_imagefeature(asm_file_name)

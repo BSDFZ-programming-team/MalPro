@@ -6,11 +6,12 @@ from io import StringIO
 import sys
 import os
 import uvicorn
+from time import sleep
 import zipfile
 import json
 import utils.PE_analyse
 from hashlib import sha256, md5
-from main import process_upload_asm, exe2asm, detect_virus, getfeaturenum
+from main import process_upload_asm, exe2asm, detect_virus, getfeaturenum, VERSION
 from shutil import rmtree
 from random import randint
 
@@ -72,7 +73,7 @@ async def get_upload_page():
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>MalPro v0.1 BETA</title>
+        <title>MalPro """+VERSION+"""</title>
         <style>
             @font-face {
                 font-family: 'good_font';
@@ -98,6 +99,7 @@ async def get_upload_page():
                 width: 100%;
                 height: 50%;
                 margin-right: 10px;
+                
             }         
             .fire{
                 flex: right;
@@ -116,9 +118,15 @@ async def get_upload_page():
             }
             h1 {
                 font-size: 24px;
-                color: black; /* 文字颜色改为白色，以便在背景上更清晰 */
+                color: black; 
             }
-                              .enter-x-left {
+            		.animbox {
+		    margin: 50px auto;
+		    width: 200px;
+		    text-align: center;
+		}
+
+        .enter-x-left {
         z-index: 9;
         opacity: 0;
         animation: enter-x-left 0.4s ease-in-out 0.3s;
@@ -162,6 +170,61 @@ async def get_upload_page():
           transform: translateY(0);
         }
       }
+      @keyframes exit-x-right {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+}
+
+
+@keyframes exit-x-left {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+}
+
+
+.exit-x-right {
+  z-index: 9;
+  opacity: 1; 
+  animation: exit-x-right 0.4s ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+
+.exit-x-left {
+  z-index: 9;
+  opacity: 1; 
+  animation: exit-x-left 0.4s ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+.exit-x-right:nth-child(1),
+.exit-x-left:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.exit-x-right:nth-child(2),
+.exit-x-left:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.exit-x-right:nth-child(3),
+.exit-x-left:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.exit-x-right:nth-child(4),
+.exit-x-left:nth-child(4) {
+  animation-delay: 0.4s;
+}
             form {
                 margin-top: 20px;
             }
@@ -175,6 +238,9 @@ async def get_upload_page():
                 font-size: 16px;
                 transition: background-color 0.3s;
             }
+                    .loading{
+        text-align: center;
+        }
             button:hover {
                 background-color: #45a049;
             }
@@ -191,16 +257,15 @@ async def get_upload_page():
         </style>
     </head>
     <body>
-
         <div class="container">
         <div class="box enter-x-left">
-    <div class="text_display">
+    <div class="text_display" id="box1">
         <img id="logo" src="/static/logo.png" alt="Logo">
-        <h1>MalPro v0.1 Beta</h1>
+        <h1>MalPro """+VERSION+"""</h1>
         <p>Upload your file here (only PE & ≤1MB files allowed).</p>
         <form action="/uploadfile/" method="post" enctype="multipart/form-data">
             <input type="file" name="file">
-            <button type="submit">Upload File</button>
+            <button type="submit" id="fileupload">Upload File</button>
         </form>
         <p></p>
                                 <div>
@@ -209,7 +274,7 @@ async def get_upload_page():
         </div>
         </div>
         <div class="box enter-x-right">
-    <div class="fire">
+    <div class="fire" id="box2">
            <svg class="flameSVG" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
 
 	<defs> 
@@ -241,7 +306,19 @@ async def get_upload_page():
 	</rect>
 
 </svg>
+<script>
 
+const fadeInButton = document.getElementById('fileupload');
+const fadeInBox1 = document.getElementById('box1');
+const fadeInBox2 = document.getElementById('box2');
+const Loading = document.getElementById('loading');
+
+fadeInButton.addEventListener('click', () => {
+  fadeInBox1.classList.add('exit-x-left');
+  fadeInBox2.classList.add('exit-x-right');
+  Loading.classList.add('animbox');
+});
+</script>
 <script src='js/TweenMax.min.js'></script>
 <script src='js/CustomEase.min.js'></script>
 <script src="js/index.js"></script>
@@ -253,6 +330,7 @@ async def get_upload_page():
 
 @app.post("/uploadfile/", response_class=HTMLResponse)
 async def upload(file: UploadFile = File(...)):
+    sleep(0.5) # For the animation XD
     data = await file.read()
     random_name = str(randint(100000, 999999))
     is_same = False
