@@ -272,7 +272,7 @@ async def upload(file: UploadFile = File(...)):
         del f
         def judge_file(random_name):
             # RETURN: [[[RESULT, PLATFORM], COLOR], RANDOM_NAME]
-            f_md5_json = open('MD5_record_list.json', 'w+')
+            f_md5_json = open('MD5_record_list.json', 'r+')
             try:
                 md5dict = json.load(f_md5_json)
             except json.decoder.JSONDecodeError:
@@ -533,7 +533,7 @@ async def upload(file: UploadFile = File(...)):
         <p></p>
         <p></p>
                 <div>
-        <p class="red small">This file has already been uploaded(same file uploaded with ID {random_name})</p>
+        <p class="red small">This file has already been uploaded(ID {random_name})</p>
     </div>
         </body>
         </html>
