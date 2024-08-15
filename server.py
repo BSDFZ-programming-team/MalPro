@@ -262,10 +262,9 @@ async def upload(file: UploadFile = File(...)):
         result=[[[f'FILE TOO LARGE ({NumberOfBytesHumanRepresentation(file_size)})', ''], 'red'], random_name]
     else:
         fn = random_name+'.exe'
-        save_path = f'./upload/'
-        if not os.path.exists(save_path):
-            os.mkdir(save_path)
-        save_file = os.path.join(save_path, fn)
+        if not os.path.exists('./upload/'):
+            os.mkdir('./upload/')
+        save_file = os.path.join('./upload/', fn)
         f = open(save_file, 'wb')
         f.write(data)
         f.close()
@@ -282,38 +281,47 @@ async def upload(file: UploadFile = File(...)):
                 return md5dict[data_md5]
             # Caculate some basic informations
             analyze_result = utils.PE_analyse.check_avaliable(save_file)
-            pe = analyze_result
-            buffer = StringIO()
-            sys.stdout = buffer
-            print(pe)
-            with open(f'./upload/{random_name}_exe_details.txt', 'w+') as f:
-                f.write(buffer.getvalue())
-            sys.stdout = sys.__stdout__
-            del f
-            try:
-                platform = utils.PE_analyse.analyze_machine(pe)
-                pe.close()
-            except:
+            if analyze_result == 'Header broken':
+                result = 'UNAVALIABLE PE FILE (header broken)'
                 platform = ''
-            if detect_virus(save_file):
-                #TODO 把exe反编译成asm
-                asm_file = exe2asm(save_file, ida_PATH)
-                result = process_upload_asm(asm_file)
+                color = 'red'
+            if analyze_result == 'Load failed':
+                result = 'UNAVALIABLE PE FILE (failed to load)'
+                platform = ''
                 color = 'red'
             else:
-                result = 'NON-VIRUS'
-                color = 'green'
+                pe = analyze_result
+                buffer = StringIO()
+                sys.stdout = buffer
+                print(pe)
+                with open(f'./upload/{random_name}_exe_details.txt', 'w+') as f:
+                    f.write(buffer.getvalue())
+                sys.stdout = sys.__stdout__
+                del f
+                try:
+                    platform = utils.PE_analyse.analyze_machine(pe)
+                    pe.close()
+                except:
+                    platform = ''
+                if detect_virus(save_file): #TODO: detect virus
+                    asm_file = exe2asm(save_file, ida_PATH)
+                    result = process_upload_asm(asm_file)
+                    color = 'red'
+                else:
+                    result = 'NON-VIRUS'
+                    color = 'green'
             md5dict[data_md5] = [[[result, platform], color], random_name]
             f_md5_json.seek(0) 
             f_md5_json.truncate()
             f_md5_json.flush()
             json.dump(md5dict, f_md5_json)
             f_md5_json.close()
-            with zipfile.ZipFile(f'./download/{random_name}.zip', 'w') as zip_file:
-                zip_file.write(f'./upload/{random_name}_exe_details.txt', random_name+'PE_details.txt')
-                if result != 'NON-VIRUS':
-                    zip_file.write(f'./upload/'+random_name+'.exe.asm_3gramfeature.csv', './features/'+random_name+'_3gramfeature.csv')
-                    zip_file.write(f'./upload/'+random_name+'.exe.asm_imgfeature.csv', './features/'+random_name+'_imgfeature.csv')
+            if result !=  'UNAVALIABLE PE FILE (failed to load)' and result != 'UNAVALIABLE PE FILE (header broken)' and result != f'FILE TOO LARGE ({NumberOfBytesHumanRepresentation(file_size)})':
+                with zipfile.ZipFile(f'./download/{random_name}.zip', 'w') as zip_file:
+                    zip_file.write(f'./upload/{random_name}_exe_details.txt', random_name+'PE_details.txt')
+                    if result != 'NON-VIRUS':
+                        zip_file.write(f'./upload/'+random_name+'.exe.asm_3gramfeature.csv', './features/'+random_name+'_3gramfeature.csv')
+                        zip_file.write(f'./upload/'+random_name+'.exe.asm_imgfeature.csv', './features/'+random_name+'_imgfeature.csv')
             rmtree('./upload')
             return [[[result, platform], color], random_name]
         result = judge_file(random_name)   
@@ -490,7 +498,11 @@ async def upload(file: UploadFile = File(...)):
 	</rect>
 
 </svg>
-
+<div>
+        <a href="https://github.com/BSDFZ-programming-team/MalPro" class="message">Need Help?</a>
+    </div>
+    </body>
+    </html>
 <script src='../js/TweenMax.min.js'></script>
 <script src='../js/CustomEase.min.js'></script>
 <script src="../js/index.js"></script>
@@ -499,6 +511,10 @@ async def upload(file: UploadFile = File(...)):
         <div class="box enter-x-right">
 <div class="details_display">                            
 '''
+    if result[0] == 'UNAVALIABLE PE FILE (failed to load)' or result[0] == 'UNAVALIABLE PE FILE (header broken)' or result[0] == f'FILE TOO LARGE ({NumberOfBytesHumanRepresentation(file_size)})':
+        error = True
+    else:
+        error = False
     if os.path.exists('./download/'+random_name+'.zip'):
         html += '''
         <h2>FILE INFO</h2>
@@ -519,25 +535,30 @@ async def upload(file: UploadFile = File(...)):
         <p>&emsp;&emsp;n: 3</p>
         <p>&emsp;&emsp;loaded features: '''+str(getfeaturenum())+'''</p>
         '''
-    elif result[0][0] == 'UNAVALIABLE PE FILE (failed to load)' or result[0][0] == 'UNAVALIABLE PE FILE (header broken)' or result[0][0] == f'FILE TOO LARGE ({NumberOfBytesHumanRepresentation(file_size)})':
+    elif error:
         pass
     if is_same:
-        html +=f'''
-                <div>
-        <p class="red small">This file has already been uploaded(ID {random_name})</p>
-    </div>
+        if not error:
+            html +=f'''
+                    <div>
+            <p class="red small">This file has already been uploaded(ID {random_name})</p>
+            </div>
+        '''
+    html += f'''</div>
+        </div>
+        </div>
         </body>
         </html>
         '''
-    html += f'''
-<div>
-        <a href="https://github.com/BSDFZ-programming-team/MalPro" class="message">Need Help?</a>
-    </div>
-</div></div>
-        </div>
-    </body>
-    </html>
-'''
+#     html += f'''
+# <div>
+#         <a href="https://github.com/BSDFZ-programming-team/MalPro" class="message">Need Help?</a>
+#     </div>
+# </div></div>
+#         </div>
+#     </body>
+#     </html>
+# '''
     return html
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=7777)
