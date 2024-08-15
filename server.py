@@ -272,7 +272,7 @@ async def upload(file: UploadFile = File(...)):
         del f
         def judge_file(random_name):
             # RETURN: [[[RESULT, PLATFORM], COLOR], RANDOM_NAME]
-            f_md5_json = open('MD5_record_list.json', 'w+')
+            f_md5_json = open('MD5_record_list.json', 'r+')
             try:
                 md5dict = json.load(f_md5_json)
             except json.decoder.JSONDecodeError:
@@ -507,7 +507,7 @@ async def upload(file: UploadFile = File(...)):
         <p>&emsp;Size: '''+NumberOfBytesHumanRepresentation(file_size)+'''</p>
         <p>&emsp;ID: '''+random_name+'''</p>
         <p>&emsp;Filename: '''+file.filename+'''</p>
-        <h5&emsp;Hash</h5>
+        <h4>&emsp;Hash</h4>
         <p>&emsp;&emsp;Sha256: '''+data_md5+'''</p>
         <p>&emsp;&emsp;MD5: '''+md5(data).hexdigest()+'''</p>
                 <h2>ANALYZE DETAILS</h2>
@@ -516,9 +516,9 @@ async def upload(file: UploadFile = File(...)):
         <a href="/downloadfile/?file_name='''+random_name+'''.zip" download>Download PE & feature details</a>
     </div>
         <h2>MODEL INFO</h2>
-        <h5>&emsp;Asmimage features</h5>
+        <h4>&emsp;Asmimage features</h4>
         <p>&emsp;&emsp;Deprecated</p>
-        <h5>&emsp;Opcode-ngram features</h5>
+        <h4>&emsp;Opcode-ngram features</h4>
         <p>&emsp;&emsp;n: 3</p>
         <p>&emsp;&emsp;loaded features: '''+str(getfeaturenum())+'''</p>
     
@@ -533,7 +533,7 @@ async def upload(file: UploadFile = File(...)):
         <p></p>
         <p></p>
                 <div>
-        <p class="red small">This file has already been uploaded(same file uploaded with ID {random_name})</p>
+        <p class="red small">This file has already been uploaded(ID {random_name})</p>
     </div>
         </body>
         </html>
