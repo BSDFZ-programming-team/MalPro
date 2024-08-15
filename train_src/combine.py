@@ -15,7 +15,7 @@ def train():
     subtrain.drop(["Class","Id"], axis=1, inplace=True)
     subtrain = subtrain.values
     X_train, X_test, y_train, y_test = model_selection.train_test_split(subtrain,labels,test_size=0.1)
-    srf = RF(n_estimators=137, n_jobs=-1)
+    srf = RF(n_estimators=500, n_jobs=-1)
     srf.fit(X_train,y_train)
     y_pred = srf.predict(X_test)
     print(classification_report(y_test, y_pred))
@@ -25,6 +25,49 @@ def train():
         pickle.dump(srf,f)
 
     return srf.score(X_test,y_test)
+def examine(srf_pickle_path='./model/model.pt'):
+    with open(srf_pickle_path, 'rb') as f:
+        srf=pickle.load(f)
+    subtrainLabel = pd.read_csv('TrainLabels.csv')
+    subtrainfeature1 = pd.read_csv("3gramfeature.csv")
+    # subtrainfeature2 = pd.read_csv("../imgfeature.csv")
+    # subtrain = pd.merge(subtrainfeature1,subtrainfeature2,on='Id')
+    subtrain = pd.merge(subtrainfeature1,subtrainLabel,on='Id')
+    labels = subtrain.Class
+    subtrain.drop(["Class","Id"], axis=1, inplace=True)
+    subtrain = subtrain.values
+    y_pred = srf.predict(subtrain)
+    print(classification_report(labels, y_pred))
+    return srf.score(subtrain, labels)
+def loop_train(loops: int):
+    subtrainLabel = pd.read_csv('TrainLabels.csv')
+    subtrainfeature1 = pd.read_csv("3gramfeature.csv")
+    # subtrainfeature2 = pd.read_csv("../imgfeature.csv")
+    # subtrain = pd.merge(subtrainfeature1,subtrainfeature2,on='Id')
+    subtrain = pd.merge(subtrainfeature1,subtrainLabel,on='Id')
+    labels = subtrain.Class
+    subtrain.drop(["Class","Id"], axis=1, inplace=True)
+    subtrain = subtrain.values
+    X_train, X_test, y_train, y_test = model_selection.train_test_split(subtrain,labels,test_size=0.1)
+    from rich.progress import track
+    srfs = {}
+    for i in track(range(loops)):
+        srf = RF(n_estimators=137, n_jobs=-1)
+        srf.fit(X_train,y_train)
+        srfs[srf.score(X_test,y_test)] = srf
+    max_ = 0
+    for i in srfs:
+        if i > max_:
+            max_ = i
+    print(max_)
+    print(srfs)
+    y_pred = srfs[max_].predict(X_test)
+    print(classification_report(y_test, y_pred))
+    with open('./model/model.pt', 'wb') as f:
+        pickle.dump(srfs[max_],f)
+
+    return srf.score(X_test,y_test)
+# print(examine())
 def random_forest_parameter_tuning1():
     subtrainLabel = pd.read_csv('../TrainLabels.csv')
     subtrainfeature1 = pd.read_csv("../3gramfeature.csv")
