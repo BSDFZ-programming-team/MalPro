@@ -418,7 +418,7 @@ async def upload(file: UploadFile = File(...)):
             .box {
                 float: left;
                 width: 100%;
-                height: 50%;
+                height: 100%;
                 margin-right: 10px;
             }         
             .fire{
@@ -496,42 +496,33 @@ async def upload(file: UploadFile = File(...)):
 <script src="../js/index.js"></script>
         </div>
         </div>
-        <div class="box">
-<div class="details_display enter-x-right">                            
+        <div class="box enter-x-right">
+<div class="details_display">                            
 '''
     if os.path.exists('./download/'+random_name+'.zip'):
         html += '''
-        <p></p>
-        <p></p>
         <h2>FILE INFO</h2>
         <p>&emsp;Size: '''+NumberOfBytesHumanRepresentation(file_size)+'''</p>
         <p>&emsp;ID: '''+random_name+'''</p>
         <p>&emsp;Filename: '''+file.filename+'''</p>
-        <h4>&emsp;Hash</h4>
-        <p>&emsp;&emsp;Sha256: '''+data_md5+'''</p>
-        <p>&emsp;&emsp;MD5: '''+md5(data).hexdigest()+'''</p>
+        <p>&emsp;Sha256: '''+data_md5+'''</p>
+        <p>&emsp;MD5: '''+md5(data).hexdigest()+'''</p>
                 <h2>ANALYZE DETAILS</h2>
 
                 <div>
         <a href="/downloadfile/?file_name='''+random_name+'''.zip" download>Download PE & feature details</a>
     </div>
         <h2>MODEL INFO</h2>
-        <h4>&emsp;Asmimage features</h4>
+        <h5>&emsp;Asmimage features</h5>
         <p>&emsp;&emsp;Deprecated</p>
-        <h4>&emsp;Opcode-ngram features</h4>
+        <h5>&emsp;Opcode-ngram features</h5>
         <p>&emsp;&emsp;n: 3</p>
         <p>&emsp;&emsp;loaded features: '''+str(getfeaturenum())+'''</p>
-    
         '''
     elif result[0][0] == 'UNAVALIABLE PE FILE (failed to load)' or result[0][0] == 'UNAVALIABLE PE FILE (header broken)' or result[0][0] == f'FILE TOO LARGE ({NumberOfBytesHumanRepresentation(file_size)})':
         pass
     if is_same:
         html +=f'''
-        <p></p>
-        <p></p>
-        <p></p>
-        <p></p>
-        <p></p>
                 <div>
         <p class="red small">This file has already been uploaded(ID {random_name})</p>
     </div>
