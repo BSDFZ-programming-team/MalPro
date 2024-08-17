@@ -15,7 +15,7 @@ def train():
     subtrain.drop(["Class","Id"], axis=1, inplace=True)
     subtrain = subtrain.values
     X_train, X_test, y_train, y_test = model_selection.train_test_split(subtrain,labels,test_size=0.1)
-    srf = RF(n_estimators=500, n_jobs=-1)
+    srf = RF(n_estimators=1337, n_jobs=-1)
     srf.fit(X_train,y_train)
     y_pred = srf.predict(X_test)
     print(classification_report(y_test, y_pred))

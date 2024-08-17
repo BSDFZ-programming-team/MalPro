@@ -1,4 +1,5 @@
 **/__pycache__
+**/model.pt
 /trainLabels_all.csv
 /train/
 /MD5_record_list.json
