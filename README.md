@@ -50,7 +50,7 @@ The powerful features in assembly files are:
 	
 We recommand n=3 or n=4 for the opgram-ncode features to train the random forest model.
 
-*NOTE: You can customise the 'n' in opcode-ngram features when training models in main.py *  
+*NOTE: You can customise the 'n' in opcode-ngram features when training models in main.py*  
 
 # Dataset
 
