@@ -11,7 +11,7 @@ import zipfile
 import json
 import utils.PE_analyse
 from hashlib import sha256, md5
-from main import process_upload_asm, exe2asm, detect_virus, getfeaturenum, VERSION
+from main import process_upload_asm, exe2asm, detect_virus, getfeaturenum, VERSION, get_n
 from shutil import rmtree
 from random import randint
 
@@ -383,7 +383,8 @@ async def upload(file: UploadFile = File(...)):
                     platform = ''
                 if detect_virus(save_file): #TODO: detect virus
                     asm_file = exe2asm(save_file, ida_PATH)
-                    result = process_upload_asm(asm_file)
+                    n = get_n('./model/ngramfeature_fitting_use.csv')
+                    result = process_upload_asm(asm_file, n)
                     color = 'red'
                 else:
                     result = 'NON-VIRUS'
@@ -398,7 +399,7 @@ async def upload(file: UploadFile = File(...)):
                 with zipfile.ZipFile(f'./download/{random_name}.zip', 'w') as zip_file:
                     zip_file.write(f'./upload/{random_name}_exe_details.txt', random_name+'PE_details.txt')
                     if result != 'NON-VIRUS':
-                        zip_file.write(f'./upload/'+random_name+'.exe.asm_3gramfeature.csv', './features/'+random_name+'_3gramfeature.csv')
+                        zip_file.write(f'./upload/'+random_name+'.exe.asm_ngramfeature.csv', './features/'+random_name+'_ngramfeature.csv')
                         zip_file.write(f'./upload/'+random_name+'.exe.asm_imgfeature.csv', './features/'+random_name+'_imgfeature.csv')
             rmtree('./upload')
             return [[[result, platform], color], random_name]
@@ -543,7 +544,7 @@ async def upload(file: UploadFile = File(...)):
         <div class="box enter-x-left">
     <div class="text_display">
         <img id="logo" src="/static/logo.png" alt="Logo">
-        <h1>MalPro v0.1 Beta</h1>
+        <h1>MalPro '''+VERSION+'''</h1>
         <h3 class="'''+color+''' larger">predict type: '''+tag+'''</h3>    
 <svg class="flameSVG" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
 
@@ -610,7 +611,7 @@ async def upload(file: UploadFile = File(...)):
         <h5>&emsp;Asmimage features</h5>
         <p>&emsp;&emsp;Deprecated</p>
         <h5>&emsp;Opcode-ngram features</h5>
-        <p>&emsp;&emsp;n: 3</p>
+        <p>&emsp;&emsp;n: '''+str(get_n('./model/ngramfeature_fitting_use.csv'))+'''</p>
         <p>&emsp;&emsp;loaded features: '''+str(getfeaturenum())+'''</p>
         '''
     elif error:

@@ -77,7 +77,7 @@ and Dataset from [kaggle](https://www.kaggle.com/competitions/malware-classifica
 dataset size: 6921 malwares (train:test=9:1)  
 malware families: 60 types  
 accuracy: 0.9050715214564369  
-**check the accuracy in default_model_accu.txt**  
+**check the accuracy in ./model/model_accu.txt**  
 time spent in extracting features: 2min32s(.asm image features) + 8min34s(opcode-3gram features)  
 time spent in training: less than 10s  
 
@@ -152,6 +152,12 @@ python main.py
 ```
 
 we upload one malware sample for each kind of the malware families(60 types). You can use main.py to examine the model. 
+
+There are two models using n=3(deafult) and n=4 are uploaded.  
+
+*But the model file of n=4 is over 100MB(too large to upload) check it out at [google drive folder](https://drive.google.com/drive/folders/1TRHQLMIY5yUd84sJWwKr4LqdmuyFxB4_)*
+
+Change the model file to n=4 if you want.
 
 choose "Predict malware(.asm) directly(using ./model/model.pt)" in the menu and enter the location of one of the examples(or you can download raw PE files of those 9 types of malwares and use IDA to generate assembly files as your own samples), then you will get a predict result.
 

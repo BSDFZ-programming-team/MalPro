@@ -3,9 +3,10 @@
 /train/
 /MD5_record_list.json
 /imgfeature.csv
-/3gramfeature.csv
+/ngramfeature.csv
 /trainLabels.csv
 /subtrainLabels.csv
 /upload/
 /tmp/
 /download/
+/model/n=4/model.pt

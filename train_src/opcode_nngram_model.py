@@ -6,7 +6,7 @@ import pickle
 from os import path
 def train():
     subtrainLabel = pd.read_csv('TrainLabels.csv')
-    subtrainfeature = pd.read_csv("3gramfeature.csv")
+    subtrainfeature = pd.read_csv("ngramfeature.csv")
     subtrain = pd.merge(subtrainLabel,subtrainfeature,on='Id')
     labels = subtrain.Class
     subtrain.drop(["Class","Id"], axis=1, inplace=True)
@@ -24,7 +24,7 @@ def train():
 def use(amsfile, tmpfile):
     filename = path.basename(amsfile)
     subtrainLabel = pd.read_csv(tmpfile)
-    subtrain = pd.read_csv(f"./upload/{filename}_3gramfeature.csv")
+    subtrain = pd.read_csv(f"./upload/{filename}_ngramfeature.csv")
     subtrain = pd.merge(subtrain,subtrainLabel,on='Id')
     # labels = subtrain.Class
     subtrain.drop(["Class","Id"], axis=1, inplace=True)

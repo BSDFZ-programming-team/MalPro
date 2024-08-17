@@ -17,11 +17,11 @@ from rich.console import Console
 from json import load
 with open('./malware_families_list.json', 'r') as f:
     resultdict = load(f)
-VERSION = 'V0.7.5 BETA'
-def process_upload_asm(asm_file_name):
+VERSION = 'V0.8 BETA'
+def process_upload_asm(asm_file_name, n):
     filebasename = basename(asm_file_name)
     asmimage.process_ams_imagefeature(asm_file_name)
-    tmpfile = opcodeandngram.process_ams_imagefeature(asm_file_name)
+    tmpfile = opcodeandngram.process_ams_imagefeature(asm_file_name, n)
     opcodeandngram.fit_feature_to_model(tmpfile, filebasename)
     with open(f'./upload/{filebasename}_tmp.csv', 'w') as f:
         f.write('Id,Class\n')
@@ -31,8 +31,13 @@ def process_upload_asm(asm_file_name):
         return 'Unknown .asm file'
     else:
         return resultdict[str(result)]
+def get_n(ngramcsvfilepath):
+    df_first_row = read_csv(ngramcsvfilepath, nrows=1, header=None)
+    first_row = df_first_row.values.tolist()[0]
+    n = first_row[1].count(',') + 1
+    return n
 def getfeaturenum():
-    df_first_row = read_csv('./model/3gramfeature_fitting_use.csv', nrows=1, header=None)
+    df_first_row = read_csv('./model/ngramfeature_fitting_use.csv', nrows=1, header=None)
     first_row = df_first_row.values.tolist()[0]
     first_row.pop(0)
     return len(first_row)
@@ -75,13 +80,15 @@ if __name__ == '__main__':
                 if not exists('./upload'):
                     mkdir('./upload')
                 console.log(f'[*] Loading models at ./model/model.pt')
+                n = get_n('./model/ngramfeature_fitting_use.csv')
+                console.log(f'N = {n}')
                 file_location = input("input the .asm file location : >>> ")
                 if not exists(file_location):
                     console.log('[bold red][-] File not found[/bold red]')
                     continue
                 stat = console.status('Analyzing...')
                 stat.start()
-                result = process_upload_asm(file_location)
+                result = process_upload_asm(file_location, n)
                 stat.stop()
                 console.bell()
                 if result == 'Unknown .asm file':
@@ -90,40 +97,53 @@ if __name__ == '__main__':
                 rmtree('./upload')
                 console.log(f'[*] Deleted tmp file at /upload')
             elif choice == '1':
-                console.log('[*] Using training file at ./train and ./subtrain')
+                n = input('n in Opcode n-gram features: >>> ')
+                if not n:
+                    console.log('[*] N = 3')
+                    n = 3
+                else:
+                    try:
+                        n = int(n)
+                        console.log(f'[*] N = {n}')
+                    except:
+                        console.log('[-] Error N')
+                        exit()
+                console.log('[*] Using training file at ./train')
                 console.log('[*] Using label file at ./TrainLabels.csv')
                 stat = console.status('Extracting ams image features......')
                 stat.start()
                 asmimage.train(stat)
-                stat.update('Extracting Opcode 3-gram features......')
-                opcodeandngram.train(stat)
+                stat.update(f'Extracting Opcode {n}-gram features......')
+                opcodeandngram.train(stat, n)
                 # stat.update('Training the model based on asm image features......')
                 # accu = asm_image_model.train()
                 # console.log(f'[+] Training DONE, Accuracy: {accu}')
-                stat.update('Training the model based on opcode 3-gram features......')
+                stat.update(f'Training the model based on opcode {n}-gram features......')
                 accu = combine.train()
                 console.log(f'[+] Training DONE, Accuracy: {accu}')
-                # copyfile('3gramfeature.csv', './model/3gramfeature_fitting_use.csv')
-                with open('3gramfeature.csv', 'r') as rf:
+                # copyfile('ngramfeature.csv', './model/ngramfeature_fitting_use.csv')
+                with open('ngramfeature.csv', 'r') as rf:
                     opcodes = rf.readline()
-                with open('./model/3gramfeature_fitting_use.csv', 'w+') as f:
+                with open('./model/ngramfeature_fitting_use.csv', 'w+') as f:
                     f.write(opcodes)
                 stat.stop()
                 console.log('Training DONE, model saved at ./model.pt')
             elif choice == '3':
                 stat = console.status('Checking features files......')
                 stat.start()
-                if not exists('3gramfeature.csv') or not exists('imgfeature.csv'):
+                if not exists('ngramfeature.csv') or not exists('imgfeature.csv'):
                     stat.stop()
                     console.log('[-] Feature file not found. Please extract your features first.')
                 else:
-                    console.log('[*] Feature file found: 3gramfeature.csv & imgfeature.csv')
-                stat.update('Training the model based on opcode 3-gram features......')
+                    console.log('[*] Feature file found: ngramfeature.csv & imgfeature.csv')
+                n = get_n('./model/ngramfeature_fitting_use.csv')
+                console.log(f'[*] N = {n}')
+                stat.update(f'Training the model based on opcode {n}-gram features......')
                 accu = combine.train()
                 console.log(f'[+] Training DONE, Accuracy: {accu}')
-                with open('3gramfeature.csv', 'r') as rf:
+                with open('ngramfeature.csv', 'r') as rf:
                     opcodes = rf.readline()
-                with open('./model/3gramfeature_fitting_use.csv', 'w+') as f:
+                with open('./model/ngramfeature_fitting_use.csv', 'w+') as f:
                     f.write(opcodes)
                 stat.stop()
                 console.log('Training DONE, model saved at ./model.pt')

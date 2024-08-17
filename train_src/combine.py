@@ -7,7 +7,7 @@ import pickle
 from sklearn.metrics import classification_report
 def train():
     subtrainLabel = pd.read_csv('TrainLabels.csv')
-    subtrainfeature1 = pd.read_csv("3gramfeature.csv")
+    subtrainfeature1 = pd.read_csv("ngramfeature.csv")
     # subtrainfeature2 = pd.read_csv("../imgfeature.csv")
     # subtrain = pd.merge(subtrainfeature1,subtrainfeature2,on='Id')
     subtrain = pd.merge(subtrainfeature1,subtrainLabel,on='Id')
@@ -25,11 +25,11 @@ def train():
         pickle.dump(srf,f)
 
     return srf.score(X_test,y_test)
-def examine(srf_pickle_path='./model/model.pt'):
+def examine(srf_pickle_path='./model/n=4/model.pt'):
     with open(srf_pickle_path, 'rb') as f:
         srf=pickle.load(f)
     subtrainLabel = pd.read_csv('TrainLabels.csv')
-    subtrainfeature1 = pd.read_csv("3gramfeature.csv")
+    subtrainfeature1 = pd.read_csv("ngramfeature.csv")
     # subtrainfeature2 = pd.read_csv("../imgfeature.csv")
     # subtrain = pd.merge(subtrainfeature1,subtrainfeature2,on='Id')
     subtrain = pd.merge(subtrainfeature1,subtrainLabel,on='Id')
@@ -41,7 +41,7 @@ def examine(srf_pickle_path='./model/model.pt'):
     return srf.score(subtrain, labels)
 def loop_train(loops: int):
     subtrainLabel = pd.read_csv('TrainLabels.csv')
-    subtrainfeature1 = pd.read_csv("3gramfeature.csv")
+    subtrainfeature1 = pd.read_csv("ngramfeature.csv")
     # subtrainfeature2 = pd.read_csv("../imgfeature.csv")
     # subtrain = pd.merge(subtrainfeature1,subtrainfeature2,on='Id')
     subtrain = pd.merge(subtrainfeature1,subtrainLabel,on='Id')
@@ -52,7 +52,7 @@ def loop_train(loops: int):
     from rich.progress import track
     srfs = {}
     for i in track(range(loops)):
-        srf = RF(n_estimators=137, n_jobs=-1)
+        srf = RF(n_estimators=500, n_jobs=-1)
         srf.fit(X_train,y_train)
         srfs[srf.score(X_test,y_test)] = srf
     max_ = 0
@@ -70,7 +70,7 @@ def loop_train(loops: int):
 # print(examine())
 def random_forest_parameter_tuning1():
     subtrainLabel = pd.read_csv('../TrainLabels.csv')
-    subtrainfeature1 = pd.read_csv("../3gramfeature.csv")
+    subtrainfeature1 = pd.read_csv("../ngramfeature.csv")
     # subtrainfeature2 = pd.read_csv("../imgfeature.csv")
     # subtrain = pd.merge(subtrainfeature1,subtrainfeature2,on='Id')
     subtrain = pd.merge(subtrainfeature1,subtrainLabel,on='Id')
@@ -93,7 +93,7 @@ def random_forest_parameter_tuning1():
 def random_forest_parameter_tuning2():
     import numpy as np
     subtrainLabel = pd.read_csv('../TrainLabels.csv')
-    subtrainfeature1 = pd.read_csv("../3gramfeature.csv")
+    subtrainfeature1 = pd.read_csv("../ngramfeature.csv")
     subtrainfeature2 = pd.read_csv("../imgfeature.csv")
     subtrain = pd.merge(subtrainfeature1,subtrainfeature2,on='Id')
     subtrain = pd.merge(subtrain,subtrainLabel,on='Id')
@@ -114,7 +114,7 @@ def random_forest_parameter_tuning2():
 def use(amsfile, tmpfile):
     filename = os.path.basename(amsfile)
     subtrainLabel = pd.read_csv(tmpfile)
-    subtrainfeature1 = pd.read_csv(f"./upload/{filename}_3gramfeature.csv")
+    subtrainfeature1 = pd.read_csv(f"./upload/{filename}_ngramfeature.csv")
     # subtrainfeature2 = pd.read_csv("../imgfeature.csv")
     # subtrain = pd.merge(subtrainfeature1,subtrainfeature2,on='Id')
     subtrain = pd.merge(subtrainfeature1,subtrainLabel,on='Id')
