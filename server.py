@@ -348,6 +348,8 @@ async def upload(file: UploadFile = File(...)):
         f.close()
         del f
         def judge_file(random_name):
+            if not os.path.exists('MD5_record_list.json'):
+                open('MD5_record_list.json', 'w').close()
             # RETURN: [[[RESULT, PLATFORM], COLOR], RANDOM_NAME]
             f_md5_json = open('MD5_record_list.json', 'r+')
             try:
