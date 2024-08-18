@@ -76,15 +76,13 @@ and Dataset from [kaggle](https://www.kaggle.com/competitions/malware-classifica
 
 ### Performance
 
-**check the accuracy in ./model/model_accu.txt and ./model/n=4/model_accu.txt**  
+**check the accuracy in ./model/model_accu.txt and ./model/n=3/model_accu.txt**  
 
 **n=4**
 
 dataset size: 6921 malwares (train:test=9:1)  
 malware families: 50 types  
 accuracy: 0.9415692821368948   
-time spent in extracting features: 2min32s(.asm image features) + 8min34s(opcode-3gram features)  
-time spent in training: less than 10s  
 
 **n=3**
 
@@ -92,9 +90,9 @@ dataset size: 6921 malwares (train:test=9:1)
 malware families: 50 types  
 accuracy: 0.9415692821368948   
 time spent in extracting features: 2min32s(.asm image features) + 8min34s(opcode-3gram features)  
-time spent in training: less than 10s  
+time spent in training: 12s
 
-## For super advanced model (137 malware families) 
+## For super advanced model (100 malware families) 
 
 Dataset: [Vx underground dataset](https://vx-underground.org/Samples/Families) (42 malware families)
 
@@ -165,13 +163,13 @@ python main.py
 
 we upload one malware sample for each kind of the malware families(50 types). You can use main.py to examine the model. 
 
-There are two models using n=3(deafult) and n=4 are uploaded.  
+There are two models using n=4(deafult) and n=3 are uploaded.  
 
 *The two model files is over 100MB(too large to upload) so we upload .zip file of it, don't forget to unzip*  
 
 *But in the release vesion, the models are not in zip files*  
 
-Change the model file to n=4 if you want.
+Change the model file to n=3 if you want.
 
 choose "Predict malware(.asm) directly(using ./model/model.pt)" in the menu and enter the location of one of the examples(or you can download raw PE files of those 9 types of malwares and use IDA to generate assembly files as your own samples), then you will get a predict result.
 
