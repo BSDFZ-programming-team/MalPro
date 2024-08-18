@@ -262,7 +262,7 @@ async def get_upload_page():
     <div class="text_display" id="box1">
         <img id="logo" src="/static/logo.png" alt="Logo">
         <h1>MalPro """+VERSION+"""</h1>
-        <p>Upload your file here (only PE & ≤1MB files allowed).</p>
+        <p>Upload your file here (only PE & ≤8MB files allowed).</p>
         <form action="/uploadfile/" method="post" enctype="multipart/form-data">
             <input type="file" name="file">
             <button type="submit" id="fileupload">Upload File</button>
@@ -336,7 +336,7 @@ async def upload(file: UploadFile = File(...)):
     is_same = False
     file_size = file.size
     data_md5 = sha256(data).hexdigest()
-    if file_size > 1024*1024:
+    if file_size > 8*1024*1024:
         result=[[[f'FILE TOO LARGE ({NumberOfBytesHumanRepresentation(file_size)})', ''], 'red'], random_name]
     else:
         fn = random_name+'.exe'

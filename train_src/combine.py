@@ -25,7 +25,7 @@ def train():
         pickle.dump(srf,f)
 
     return srf.score(X_test,y_test)
-def examine(srf_pickle_path='./model/n=4/model.pt'):
+def examine(srf_pickle_path='./model/model.pt'):
     with open(srf_pickle_path, 'rb') as f:
         srf=pickle.load(f)
     subtrainLabel = pd.read_csv('TrainLabels.csv')
