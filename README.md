@@ -78,7 +78,7 @@ and Dataset from [kaggle](https://www.kaggle.com/competitions/malware-classifica
 
 ### Performance
 
-**check the accuracy in ./model/model_accu.txt and ./model/n=3/model_accu.txt**  
+**check the accuracy in ./model/model_accu.txt and ./model/n=3/model_accu.txt in 50-malware-branch**  
 
 **n=4**
 
@@ -96,11 +96,13 @@ time spent in training: 12s
 
 ## For super advanced model (85 malware families) 
 
+**check the accuracy in ./model/model_accu.txt in 85-malware-branch**  
+
 Dataset: [Vx underground dataset](https://vx-underground.org/Samples/Families) (42 malware families)
 
 and Dataset from [kaggle](https://www.kaggle.com/competitions/malware-classification) (8 malware families)
 
-and Dataset from [BODMAS](https://github.com/whyisyoung/BODMAS)(130 malware families)  
+and Dataset from [BODMAS](https://github.com/whyisyoung/BODMAS)(35 malware families)  
 
 ### Performance
 
@@ -195,11 +197,12 @@ download the analyze details if you want.
 
 ### train
 
-*ONLY FOR PRIMRARY MODEL(9 types)*  
-
 **download .asm dataset with labels**
 
-Because the program is still developing, we can't use the Vx underground dataset yet. Instead, you can download the dataset of [kaggle](https://www.kaggle.com/competitions/malware-classification) which contains 9 types of malware famlies
+You can download the dataset of [kaggle](https://www.kaggle.com/competitions/malware-classification) which contains 9 types of malware famlies.  
+
+Or you can download other PE malware dataset and turn them to LST file in IDA and label them.
+
 
 **create /train folder and TrainLabels.csv**
 
