@@ -78,7 +78,7 @@ and Dataset from [kaggle](https://www.kaggle.com/competitions/malware-classifica
 
 ### Performance
 
-**check the accuracy in ./model/model_accu.txt and ./model/n=3/model_accu.txt**  
+**check the accuracy in ./model/model_accu.txt and ./model/n=3/model_accu.txt in 50-malware-branch**  
 
 **n=4**
 
@@ -95,6 +95,8 @@ time spent in extracting features: 2min32s(.asm image features) + 8min34s(opcode
 time spent in training: 12s
 
 ## For super advanced model (85 malware families) 
+
+**check the accuracy in ./model/model_accu.txt in 85-malware-branch**  
 
 Dataset: [Vx underground dataset](https://vx-underground.org/Samples/Families) (42 malware families)
 
