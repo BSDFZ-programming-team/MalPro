@@ -17,10 +17,10 @@ from rich.console import Console
 from json import load
 with open('./malware_families_list.json', 'r') as f:
     resultdict = load(f)
-VERSION = 'V0.9 BETA'
+VERSION = 'V0.8.3 BETA'
 def process_upload_asm(asm_file_name, n):
     filebasename = basename(asm_file_name)
-    asmimage.process_ams_imagefeature(asm_file_name) 
+    asmimage.process_ams_imagefeature(asm_file_name)
     tmpfile = opcodeandngram.process_ams_imagefeature(asm_file_name, n)
     opcodeandngram.fit_feature_to_model(tmpfile, filebasename)
     with open(f'./upload/{filebasename}_tmp.csv', 'w') as f:
@@ -107,20 +107,12 @@ if __name__ == '__main__':
                         console.log(f'[*] N = {n}')
                     except:
                         console.log('[-] Error N')
-                        continue
+                        exit()
                 console.log('[*] Using training file at ./train')
                 console.log('[*] Using label file at ./TrainLabels.csv')
-                _ = input('[!] asm image feature is now deprecated after v0.9, still extract asm image features?(Y/N): >>> ')
-                stat = console.status('')
-                if not _ or _ == 'N' or _ == 'n' or _ == 'no' or _ == 'No' or _ == 'NO':
-                    pass
-                elif _ == 'Y' or _ == 'y' or _ == 'yes' or _ == 'Yes' or _ == 'YES':
-                    stat.update('Extracting ams image features......')
-                    stat.start()
-                    asmimage.train(stat)
-                else:
-                    console.log(f'[-] Unknown input {_}')
-                    continue
+                stat = console.status('Extracting ams image features......')
+                stat.start()
+                asmimage.train(stat)
                 stat.update(f'Extracting Opcode {n}-gram features......')
                 opcodeandngram.train(stat, n)
                 # stat.update('Training the model based on asm image features......')
@@ -139,11 +131,11 @@ if __name__ == '__main__':
             elif choice == '3':
                 stat = console.status('Checking features files......')
                 stat.start()
-                if not exists('ngramfeature.csv'):
+                if not exists('ngramfeature.csv') or not exists('imgfeature.csv'):
                     stat.stop()
                     console.log('[-] Feature file not found. Please extract your features first.')
                 else:
-                    console.log('[*] Feature file found: ngramfeature.csv')
+                    console.log('[*] Feature file found: ngramfeature.csv & imgfeature.csv')
                 n = get_n('./model/ngramfeature_fitting_use.csv')
                 console.log(f'[*] N = {n}')
                 stat.update(f'Training the model based on opcode {n}-gram features......')

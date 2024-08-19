@@ -62,8 +62,6 @@ Dataset: [kaggle](https://www.kaggle.com/competitions/malware-classification)
 
 ### Performance
 
-**n=3**
-
 dataset size: 2480 malwares (train:test=9:1)  
 malware families: 9 types  
 accuracy: 0.9959677419354839  
@@ -94,7 +92,7 @@ accuracy: 0.9415692821368948
 time spent in extracting features: 2min32s(.asm image features) + 8min34s(opcode-3gram features)  
 time spent in training: 12s
 
-## For super advanced model (85 malware families) 
+## For super advanced model (100 malware families) 
 
 Dataset: [Vx underground dataset](https://vx-underground.org/Samples/Families) (42 malware families)
 
@@ -104,11 +102,9 @@ and Dataset from [BODMAS](https://github.com/whyisyoung/BODMAS)(130 malware fami
 
 ### Performance
 
-**n=4**
+**STILL DEVELOPING**  
 
-dataset size: 9352 malwares (train:test=9:1)  
-malware families: 85 types  
-accuracy: 0.8728632478632479   
+NONE  
 
 # Project usage
 
