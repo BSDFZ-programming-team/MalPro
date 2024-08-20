@@ -41,8 +41,10 @@ if not os.path.exists(ida_PATH):
     exit()
 if not os.path.isdir(ida_PATH):
     print('[-] Input your install dir, ex: D:/IDApro/')
+    exit()
 if not 'idat64.exe' in os.listdir(ida_PATH):
     print('[-] idat64.exe missing')
+    exit()
 app = FastAPI()
 # fastapi_cdn_host.patch_docs(app, favicon_url='./static/logo.svg')
 # 定义上传文件的目标目录
@@ -365,11 +367,11 @@ async def upload(file: UploadFile = File(...)):
                 result = 'UNAVALIABLE PE FILE (header broken)'
                 platform = ''
                 color = 'red'
-            if analyze_result == 'Load failed':
+            elif analyze_result == 'Load failed':
                 result = 'UNAVALIABLE PE FILE (failed to load)'
                 platform = ''
                 color = 'red'
-            if analyze_result == 'failed to load the DOS Header magic':
+            elif analyze_result == 'failed to load the DOS Header magic':
                 result = 'UNAVALIABLE PE FILE (failed to load the DOS Header magic)'
                 platform = ''
                 color = 'red'
