@@ -17,7 +17,9 @@ from rich.console import Console
 from json import load
 with open('./malware_families_list.json', 'r') as f:
     resultdict = load(f)
-VERSION = 'V0.9 BETA'
+with open('./malware_families_behaviour.json', 'r') as f:
+    behaviourdict = load(f)
+VERSION = 'V0.10 BETA'
 def process_upload_asm(asm_file_name, n):
     filebasename = basename(asm_file_name)
     asmimage.process_ams_imagefeature(asm_file_name) 
@@ -31,6 +33,12 @@ def process_upload_asm(asm_file_name, n):
         return 'Unknown .asm file'
     else:
         return resultdict[str(result)]
+def get_description(family_name):
+    new_dict = {}
+    for key, value in resultdict.items():
+        new_dict[value] = key
+    id = new_dict[family_name]
+    return behaviourdict[id]
 def get_n(ngramcsvfilepath):
     df_first_row = read_csv(ngramcsvfilepath, nrows=1, header=None)
     first_row = df_first_row.values.tolist()[0]

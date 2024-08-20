@@ -11,7 +11,7 @@ import zipfile
 import json
 import utils.PE_analyse
 from hashlib import sha256, md5
-from main import process_upload_asm, exe2asm, detect_virus, getfeaturenum, VERSION, get_n
+from main import process_upload_asm, exe2asm, detect_virus, getfeaturenum, VERSION, get_n, get_description
 from shutil import rmtree
 from random import randint
 
@@ -415,8 +415,11 @@ async def upload(file: UploadFile = File(...)):
         is_same = True
         random_name = result[-1]
     result = result[0][0]
-    tag = Generate_tag(result) #TODO add more TAG
-        
+    tag = Generate_tag(result) 
+    if result[0].startswith('UNAVALIABLE PE FILE') or result[0] == f'FILE TOO LARGE ({NumberOfBytesHumanRepresentation(file_size)})':
+        error = True
+    else:
+        error = False
     html = '''
     <!DOCTYPE html>
     <html lang="en">
@@ -425,7 +428,7 @@ async def upload(file: UploadFile = File(...)):
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>MalPro v0.1 BETA</title>
+        <title>'''+VERSION+'''</title>
         <style>
             @font-face {
                 font-family: 'good_font';
@@ -533,6 +536,7 @@ async def upload(file: UploadFile = File(...)):
                 font-size: 24px;
                 color: black; 
             }
+            
             form {
                 margin-top: 20px;
             }
@@ -551,7 +555,12 @@ async def upload(file: UploadFile = File(...)):
     <div class="text_display">
         <img id="logo" src="/static/logo.png" alt="Logo">
         <h1>MalPro '''+VERSION+'''</h1>
-        <h3 class="'''+color+''' larger">predict type: '''+tag+'''</h3>    
+        <h3 class="'''+color+''' larger">predict type: '''+tag+'''</h3>    '''
+    if not error:
+        html += '''
+        <small><h5 description="'''+color+'''">'''+get_description(result[0])+'''</h5></small>    '''
+
+    html += '''
 <svg class="flameSVG" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
 
 	<defs> 
@@ -596,10 +605,6 @@ async def upload(file: UploadFile = File(...)):
         <div class="box enter-x-right">
 <div class="details_display">                            
 '''
-    if result[0] == 'UNAVALIABLE PE FILE (failed to load)' or result[0] == 'UNAVALIABLE PE FILE (header broken)' or result[0] == f'FILE TOO LARGE ({NumberOfBytesHumanRepresentation(file_size)})':
-        error = True
-    else:
-        error = False
     if os.path.exists('./download/'+random_name+'.zip'):
         html += '''
         <h2>FILE INFO</h2>
@@ -626,7 +631,7 @@ async def upload(file: UploadFile = File(...)):
         if not error:
             html +=f'''
                     <div>
-            <p class="red small">This file has already been uploaded(ID {random_name})</p>
+            <small><p class="red">This file has already been uploaded(ID {random_name})</p></small>
             </div>
         '''
     html += f'''</div>
