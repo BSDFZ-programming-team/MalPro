@@ -369,6 +369,10 @@ async def upload(file: UploadFile = File(...)):
                 result = 'UNAVALIABLE PE FILE (failed to load)'
                 platform = ''
                 color = 'red'
+            if analyze_result == 'failed to load the DOS Header magic':
+                result = 'UNAVALIABLE PE FILE (failed to load the DOS Header magic)'
+                platform = ''
+                color = 'red'
             else:
                 pe = analyze_result
                 buffer = StringIO()

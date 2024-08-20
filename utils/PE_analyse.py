@@ -38,8 +38,11 @@ def check_avaliable(pe_file):
         PE_file_MZ = pe.DOS_HEADER
         assert hex(PE_file_MZ.e_magic) == '0x5a4d' and hex(PE_file_PE.Signature) == '0x4550'
     except Exception as e:
+        print(type(e))
         if type(e) == AssertionError:
             result = 'Header broken'
+        elif type(e) == pefile.PEFormatError and e.value == 'DOS Header magic not found.':
+            result = 'failed to load the DOS Header magic'
         else:
             result = 'Load failed'
     else:

@@ -189,7 +189,7 @@ python server.py
 
 It will run a web server on your host(port 7777) as the frontend of our project, open it and upload your PE file, you will see a result like this.
 
-**ONLY SUPPORT 50 TYPES OF MALWARE FAMILIES**  
+**ONLY SUPPORT 85 TYPES OF MALWARE FAMILIES**  
 
 ![image](https://files.cnblogs.com/files/blogs/820580/example.ico?t=1723649092&download=true)
 
