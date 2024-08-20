@@ -112,6 +112,12 @@ dataset size: 9352 malwares (train:test=9:1)
 malware families: 85 types  
 accuracy: 0.8728632478632479   
 
+**n=4**
+
+dataset size: 9352 malwares (train:test=9:1)  
+malware families: 85 types  
+accuracy: 0.8824786324786325 
+
 # Project usage
 
 there is a model trained by us in the project file (model/model.pt), so you can predict the malware without training on your own
