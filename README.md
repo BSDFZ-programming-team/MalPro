@@ -91,7 +91,6 @@ accuracy: 0.9415692821368948
 dataset size: 6921 malwares (train:test=9:1)  
 malware families: 50 types  
 accuracy: 0.9415692821368948   
-time spent in extracting features: 2min32s(.asm image features) + 8min34s(opcode-3gram features)  
 time spent in training: 12s
 
 ## For super advanced model (85 malware families) 
@@ -112,7 +111,7 @@ dataset size: 9352 malwares (train:test=9:1)
 malware families: 85 types  
 accuracy: 0.8728632478632479   
 
-**n=4**
+**n=3**
 
 dataset size: 9352 malwares (train:test=9:1)  
 malware families: 85 types  
