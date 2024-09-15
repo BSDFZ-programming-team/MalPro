@@ -8,7 +8,7 @@
 <em><h5 align="center">malware classifier under python3 and machine learning</h5></em>
 <img src=https://files.cnblogs.com/files/blogs/820580/logo.ico?t=1722150186&download=true>
 
-ps: also a project for 上海交通大学人工智能荣昶杯
+ps: 1st project for Shang Hai Jiao Tong University AI application development competition
 
 > 🚧 **Currently under developing** 🚧
 >
