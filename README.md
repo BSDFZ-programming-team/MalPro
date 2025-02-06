@@ -229,9 +229,9 @@ you can train your model in this script
 
 ### Project by:  
 
-WeiLin Du([LamentXU](https://www.cnblogs.com/LAMENTXU))  
-YiFan He([0D00-O721](https://github.com/0D00-O721))  
-QiXun Zhong([ZQX-art](https://github.com/ZQX-art))  
+[LamentXU](https://www.cnblogs.com/LAMENTXU)   
+[0D00-O721](https://github.com/0D00-O721)   
+[ZQX-art](https://github.com/ZQX-art)    
 
 ### Guided by:  
 
